@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: #F5F5F0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Wave decoration at bottom */
+    .wave-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 320px;
+    }
+
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: -5%;
+      width: 110%;
+    }
+
+    .wave-1 {
+      height: 100%;
+      background: {{primary}};
+      clip-path: ellipse(75% 100% at 50% 100%);
+    }
+
+    .wave-2 {
+      height: 75%;
+      background: {{accent}};
+      clip-path: ellipse(65% 100% at 55% 100%);
+      opacity: 0.4;
+    }
+
+    /* Top right blob */
+    .top-blob {
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 300px;
+      height: 300px;
+      background: {{accent}};
+      border-radius: 50%;
+      opacity: 0.15;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 45px 50px;
+      height: calc(100% - 120px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      height: 65px;
+    }
+
+    .hiring-badge {
+      background: {{primary}};
+      color: white;
+      padding: 14px 35px;
+      border-radius: 50px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Big headline */
+    .main-headline {
+      margin-bottom: 25px;
+    }
+
+    .main-headline h1 {
+      font-size: 72px;
+      font-weight: 900;
+      color: {{secondary}};
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .main-headline h1 span {
+      color: {{primary}};
+    }
+
+    /* Job card */
+    .job-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px 35px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+      border-left: 6px solid {{primary}};
+    }
+
+    .job-title {
+      font-size: 38px;
+      font-weight: 800;
+      color: {{secondary}};
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .job-meta {
+      display: flex;
+      gap: 40px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .meta-icon {
+      width: 50px;
+      height: 50px;
+      background: {{background}};
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .meta-text .label {
+      font-size: 14px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .meta-text .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: {{secondary}};
+    }
+
+    /* Two columns */
+    .two-cols {
+      display: flex;
+      gap: 35px;
+      flex: 1;
+    }
+
+    .col {
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: {{secondary}};
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 4px solid {{primary}};
+      display: inline-block;
+    }
+
+    .section ul {
+      list-style: none;
+    }
+
+    .section li {
+      font-size: 19px;
+      color: #444;
+      padding: 10px 0 10px 28px;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .section li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: {{primary}};
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    /* Footer on wave */
+    .footer {
+      position: absolute;
+      bottom: 35px;
+      left: 50px;
+      right: 50px;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .apply-btn {
+      background: white;
+      color: {{secondary}};
+      padding: 20px 50px;
+      border-radius: 12px;
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .website {
+      font-size: 22px;
+      color: white;
+      font-weight: 600;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="top-blob"></div>
+    <div class="wave-container">
+      <div class="wave wave-2"></div>
+      <div class="wave wave-1"></div>
+    </div>
+
+    <div class="content">
+      <div class="header">
+        <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+        <div class="hiring-badge">We're Hiring</div>
+      </div>
+
+      <div class="main-headline">
+        <h1>Join Our <span>Team!</span></h1>
+      </div>
+
+      <div class="job-card">
+        <h2 class="job-title">{{jobTitle}}</h2>
+        <div class="job-meta">
+          <div class="meta-item">
+            <div class="meta-icon">💰</div>
+            <div class="meta-text">
+              <div class="label">Salary</div>
+              <div class="value">{{salary}}</div>
+            </div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-icon">🏠</div>
+            <div class="meta-text">
+              <div class="label">Location</div>
+              <div class="value">Remote</div>
+            </div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-icon">🕐</div>
+            <div class="meta-text">
+              <div class="label">Schedule</div>
+              <div class="value">{{schedule}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-cols">
+        <div class="col section">
+          <h3 class="section-title">Responsibilities</h3>
+          <ul>{{responsibilities}}</ul>
+        </div>
+        <div class="col section">
+          <h3 class="section-title">Qualifications</h3>
+          <ul>{{qualifications}}</ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="apply-btn">Apply Now</div>
+      <div class="website">www.saganrecruitment.com/career</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: #FAFAFA;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Diagonal colored section */
+    .diagonal-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: {{primary}};
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 55%);
+    }
+
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 50px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      height: 55px;
+      filter: brightness(0) invert(1);
+    }
+
+    .badge {
+      background: white;
+      color: {{secondary}};
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-right: 140px;
+    }
+
+    /* Big headline */
+    .headline {
+      color: white;
+      margin-bottom: 80px;
+    }
+
+    .headline h1 {
+      font-size: 85px;
+      font-weight: 900;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    /* Main content area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 150px;
+    }
+
+    .job-title {
+      font-size: 48px;
+      font-weight: 800;
+      color: {{secondary}};
+      margin-bottom: 25px;
+      line-height: 1.2;
+    }
+
+    .job-details {
+      display: flex;
+      gap: 50px;
+      margin-bottom: 40px;
+    }
+
+    .detail {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: {{secondary}};
+    }
+
+    .detail-value.highlight {
+      color: {{primary}};
+    }
+
+    /* Requirements pills */
+    .requirements {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .req-pill {
+      background: {{background}};
+      color: {{secondary}};
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .apply-btn {
+      background: {{primary}};
+      color: white;
+      padding: 20px 50px;
+      border-radius: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 18px;
+      color: #666;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Diagonal background -->
+    <div class="diagonal-bg"></div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Header -->
+      <div class="header">
+        <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan">
+        <div class="badge">We're Hiring</div>
+      </div>
+
+      <!-- Headline -->
+      <div class="headline">
+        <h1>Join Our<br>Team</h1>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <h2 class="job-title">{{jobTitle}}</h2>
+
+        <div class="job-details">
+          <div class="detail">
+            <span class="detail-label">Salary</span>
+            <span class="detail-value highlight">{{salary}}</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Location</span>
+            <span class="detail-value">{{location}}</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Schedule</span>
+            <span class="detail-value">{{schedule}}</span>
+          </div>
+        </div>
+
+        <div class="requirements">
+          {{requirementPills}}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="apply-btn">Apply Now</div>
+          <div class="website">saganrecruitment.com/career</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: {{secondary}};
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Geometric shapes */
+    .geo-circle {
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .geo-1 {
+      top: -150px;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      border: 60px solid {{primary}};
+      opacity: 0.3;
+    }
+
+    .geo-2 {
+      bottom: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: {{primary}};
+      opacity: 0.2;
+    }
+
+    .geo-3 {
+      top: 50%;
+      right: 5%;
+      width: 150px;
+      height: 150px;
+      background: {{accent}};
+      opacity: 0.5;
+    }
+
+    .geo-4 {
+      top: 20%;
+      right: 15%;
+      width: 80px;
+      height: 80px;
+      border: 15px solid {{accent}};
+      opacity: 0.4;
+    }
+
+    /* Lines */
+    .line-1 {
+      position: absolute;
+      top: 100px;
+      left: 50px;
+      width: 4px;
+      height: 200px;
+      background: {{primary}};
+      opacity: 0.5;
+    }
+
+    .line-2 {
+      position: absolute;
+      bottom: 200px;
+      left: 100px;
+      width: 150px;
+      height: 4px;
+      background: {{accent}};
+      opacity: 0.4;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 60px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Logo */
+    .logo {
+      height: 55px;
+      margin-bottom: 50px;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Big headline */
+    .headline {
+      margin-bottom: 50px;
+    }
+
+    .headline-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .headline h1 {
+      font-size: 90px;
+      font-weight: 900;
+      color: white;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    .headline h1 span {
+      color: {{accent}};
+    }
+
+    .headline-line {
+      width: 100px;
+      height: 8px;
+      background: {{primary}};
+    }
+
+    /* Job info box */
+    .job-box {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 700px;
+      margin-bottom: 30px;
+    }
+
+    .job-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: {{secondary}};
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .job-details {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .detail-label {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .detail-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: {{secondary}};
+    }
+
+    .detail-value.highlight {
+      color: {{primary}};
+    }
+
+    /* Requirements */
+    .requirements {
+      display: flex;
+      gap: 40px;
+      flex: 1;
+      max-width: 800px;
+    }
+
+    .req-col {
+      flex: 1;
+    }
+
+    .req-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: {{accent}};
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+
+    .req-list {
+      list-style: none;
+    }
+
+    .req-list li {
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      padding: 8px 0;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .req-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: {{accent}};
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .apply-btn {
+      background: {{primary}};
+      color: white;
+      padding: 20px 50px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .website {
+      font-size: 18px;
+      color: rgba(255,255,255,0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Geometric shapes -->
+    <div class="geo-circle geo-1"></div>
+    <div class="geo-circle geo-2"></div>
+    <div class="geo-circle geo-3"></div>
+    <div class="geo-circle geo-4"></div>
+    <div class="line-1"></div>
+    <div class="line-2"></div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Logo -->
+      <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan">
+
+      <!-- Headline -->
+      <div class="headline">
+        <div class="headline-row">
+          <h1>We're<br><span>Hiring</span></h1>
+          <div class="headline-line"></div>
+        </div>
+      </div>
+
+      <!-- Job Box -->
+      <div class="job-box">
+        <h2 class="job-title">{{jobTitle}}</h2>
+        <div class="job-details">
+          <div class="detail-item">
+            <span class="detail-label">Salary</span>
+            <span class="detail-value highlight">{{salary}}/mo</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Location</span>
+            <span class="detail-value">Remote</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Schedule</span>
+            <span class="detail-value">{{schedule}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requirements -->
+      <div class="requirements">
+        <div class="req-col">
+          <h3 class="req-title">Responsibilities</h3>
+          <ul class="req-list">{{responsibilities}}</ul>
+        </div>
+        <div class="req-col">
+          <h3 class="req-title">Qualifications</h3>
+          <ul class="req-list">{{qualifications}}</ul>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="apply-btn">Apply Now</div>
+        <div class="website">saganrecruitment.com/career</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

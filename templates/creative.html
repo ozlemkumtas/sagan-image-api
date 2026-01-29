@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: {{primary}};
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Large decorative circle */
+    .big-circle {
+      position: absolute;
+      bottom: -200px;
+      right: -100px;
+      width: 700px;
+      height: 700px;
+      background: {{accent}};
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    /* Small decorative elements */
+    .small-circle {
+      position: absolute;
+      top: 150px;
+      right: 80px;
+      width: 100px;
+      height: 100px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+
+    .dot-pattern {
+      position: absolute;
+      top: 300px;
+      left: 50px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    /* Logo - using white version for dark background */
+    .logo {
+      height: 55px;
+      margin-bottom: 30px;
+    }
+
+    /* Headline */
+    .headline {
+      display: flex;
+      gap: 20px;
+      align-items: baseline;
+      margin-bottom: 80px;
+    }
+
+    .headline-text {
+      font-size: 56px;
+      font-weight: 800;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Job card */
+    .job-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 50px 60px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 700px;
+      width: 85%;
+    }
+
+    .job-card-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: {{secondary}};
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .job-card-salary {
+      font-size: 28px;
+      font-weight: 600;
+      color: {{primary}};
+      margin-bottom: 10px;
+    }
+
+    .job-card-location {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .job-card-btn {
+      display: inline-block;
+      background: {{primary}};
+      color: white;
+      padding: 16px 50px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 50px;
+      left: 60px;
+      right: 60px;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 18px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    .footer-text span {
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Decorative elements -->
+    <div class="big-circle"></div>
+    <div class="small-circle"></div>
+    <div class="dot-pattern">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <!-- Logo -->
+    <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan">
+
+    <!-- Headline -->
+    <div class="headline">
+      <span class="headline-text">We Are Hiring</span>
+    </div>
+
+    <!-- Job Card -->
+    <div class="job-card">
+      <h1 class="job-card-title">{{jobTitle}}</h1>
+      <p class="job-card-salary">Earn up to {{salary}} / Mo</p>
+      <p class="job-card-location">{{location}}</p>
+      <div class="job-card-btn">Apply Now</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-text">Visit our website: <span>www.saganrecruitment.com/career</span></p>
+    </div>
+  </div>
+</body>
+</html>

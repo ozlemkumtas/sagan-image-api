@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: {{primary}};
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Large spotlight circle */
+    .spotlight {
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      background: {{accent}};
+      border-radius: 50%;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Decorative circles */
+    .deco-circle-1 {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      top: 150px;
+      right: 80px;
+    }
+
+    .deco-circle-2 {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      top: 400px;
+      left: 60px;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 50px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .logo {
+      height: 60px;
+      filter: brightness(0) invert(1);
+    }
+
+    .headline {
+      text-align: right;
+    }
+
+    .headline h1 {
+      font-size: 72px;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    /* Floating job card */
+    .job-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 20px;
+      padding: 40px 50px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      min-width: 500px;
+    }
+
+    .job-card::before {
+      content: '';
+      position: absolute;
+      left: -15px;
+      top: 30px;
+      bottom: 30px;
+      width: 6px;
+      background: {{accent}};
+      border-radius: 3px;
+    }
+
+    .job-title {
+      font-size: 38px;
+      font-weight: 800;
+      color: {{secondary}};
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .job-salary {
+      font-size: 32px;
+      font-weight: 700;
+      color: {{primary}};
+      margin-bottom: 10px;
+    }
+
+    .job-location {
+      font-size: 22px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .job-schedule {
+      font-size: 18px;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 50px;
+      left: 50px;
+      right: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .cta {
+      font-size: 26px;
+      font-weight: 700;
+      color: {{secondary}};
+    }
+
+    .website {
+      font-size: 20px;
+      color: {{secondary}};
+      font-weight: 500;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Spotlight circle -->
+    <div class="spotlight"></div>
+
+    <!-- Decorative circles -->
+    <div class="deco-circle-1"></div>
+    <div class="deco-circle-2"></div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Header -->
+      <div class="header">
+        <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan">
+        <div class="headline">
+          <h1>We Are<br>Hiring</h1>
+        </div>
+      </div>
+
+      <!-- Job Card -->
+      <div class="job-card">
+        <h2 class="job-title">{{jobTitle}}</h2>
+        <div class="job-salary">Earn up to {{salary}} / Mo</div>
+        <div class="job-location">{{location}}</div>
+        <div class="job-schedule">{{schedule}}</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="cta">Visit our website today!</div>
+      <div class="website">www.saganrecruitment.com/career/</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top accent bar */
+    .top-bar {
+      height: 8px;
+      background: {{primary}};
+    }
+
+    /* SAGAN watermark */
+    .watermark {
+      position: absolute;
+      right: -50px;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-size: 180px;
+      font-weight: 900;
+      color: #F5F5F5;
+      letter-spacing: 15px;
+      text-transform: uppercase;
+    }
+
+    /* Content */
+    .content {
+      padding: 60px;
+      height: calc(100% - 8px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 50px;
+    }
+
+    .logo {
+      height: 50px;
+    }
+
+    .badge {
+      background: {{primary}};
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 750px;
+    }
+
+    .job-title {
+      font-size: 64px;
+      font-weight: 900;
+      color: #1E3A5F;
+      line-height: 1.1;
+      margin-bottom: 40px;
+    }
+
+    .job-title span {
+      color: {{primary}};
+    }
+
+    /* Info grid */
+    .info-grid {
+      display: flex;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+
+    .info-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1E3A5F;
+    }
+
+    .info-value.highlight {
+      color: {{primary}};
+    }
+
+    /* Skills */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 50px;
+    }
+
+    .skill {
+      background: #F8F9FA;
+      color: #1E3A5F;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      border: 2px solid #E8E8E8;
+    }
+
+    /* CTA */
+    .cta {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .apply-btn {
+      background: {{primary}};
+      color: white;
+      padding: 22px 50px;
+      border-radius: 15px;
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 16px;
+      color: #888;
+    }
+
+    /* Sagan dots */
+    .sagan-dots {
+      position: absolute;
+      bottom: 60px;
+      right: 60px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+    }
+
+    .dot-1 { background: #F59E0B; }
+    .dot-2 { background: #10B981; }
+    .dot-3 { background: #3B82F6; }
+    .dot-4 { background: #EF4444; }
+    .dot-5 { background: #9CA3AF; }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Watermark -->
+    <div class="watermark">SAGAN</div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Header -->
+      <div class="header">
+        <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+        <div class="badge">We're Hiring</div>
+      </div>
+
+      <!-- Main -->
+      <div class="main">
+        <h1 class="job-title">{{jobTitle}}</h1>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Salary</span>
+            <span class="info-value highlight">{{salary}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Location</span>
+            <span class="info-value">{{location}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Schedule</span>
+            <span class="info-value">{{schedule}}</span>
+          </div>
+        </div>
+
+        <div class="skills">
+          {{requirementPills}}
+        </div>
+
+        <div class="cta">
+          <div class="apply-btn">Apply Now</div>
+          <div class="website">saganrecruitment.com/career</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sagan dots -->
+    <div class="sagan-dots">
+      <div class="dot dot-1"></div>
+      <div class="dot dot-2"></div>
+      <div class="dot dot-3"></div>
+      <div class="dot dot-4"></div>
+      <div class="dot dot-5"></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(180deg, #F5F5F0 0%, #EFEFEA 100%);
+      padding: 60px;
+      position: relative;
+    }
+
+    /* Logo */
+    .logo {
+      height: 50px;
+      margin-bottom: 50px;
+    }
+
+    /* Hiring banner */
+    .hiring-banner {
+      background: {{primary}};
+      color: white;
+      display: inline-block;
+      padding: 12px 30px;
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 50px;
+    }
+
+    /* Job info */
+    .job-title {
+      font-size: 48px;
+      font-weight: 800;
+      color: {{secondary}};
+      margin-bottom: 15px;
+      max-width: 800px;
+      line-height: 1.2;
+    }
+
+    .salary {
+      font-size: 30px;
+      font-weight: 600;
+      color: {{primary}};
+      margin-bottom: 50px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 35px;
+      max-width: 750px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: {{secondary}};
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .section ul {
+      list-style: none;
+    }
+
+    .section li {
+      font-size: 16px;
+      color: #444;
+      padding: 6px 0 6px 25px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .section li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: {{primary}};
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 50px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .email-icon {
+      width: 40px;
+      height: 40px;
+      background: {{primary}};
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .email-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
+    }
+
+    .website {
+      font-size: 16px;
+      color: {{secondary}};
+    }
+
+    .website span {
+      color: {{primary}};
+      font-weight: 600;
+    }
+
+    .apply-btn {
+      background: {{accent}};
+      color: {{secondary}};
+      padding: 18px 45px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Logo -->
+    <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+
+    <!-- Hiring Banner -->
+    <div class="hiring-banner">We Are Hiring</div>
+
+    <!-- Job Title & Salary -->
+    <h1 class="job-title">{{jobTitle}}</h1>
+    <p class="salary">Earn up to {{salary}} / Mo</p>
+
+    <!-- Responsibilities -->
+    <div class="section">
+      <h3 class="section-title">Key Responsibilities</h3>
+      <ul>
+        {{responsibilities}}
+      </ul>
+    </div>
+
+    <!-- Qualifications -->
+    <div class="section">
+      <h3 class="section-title">Qualifications</h3>
+      <ul>
+        {{qualifications}}
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-left">
+        <div class="email-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </div>
+        <div class="website">Visit: <span>www.saganrecruitment.com/career</span></div>
+      </div>
+      <div class="apply-btn">Apply Now</div>
+    </div>
+  </div>
+</body>
+</html>

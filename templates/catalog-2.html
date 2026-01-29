@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(135deg, #E8F4FC 0%, #D6EDFF 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 60px;
+    }
+
+    /* Decorative elements */
+    .deco-1 {
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 350px;
+      height: 350px;
+      background: #23A3FE;
+      opacity: 0.12;
+      border-radius: 50%;
+    }
+
+    .deco-2 {
+      position: absolute;
+      bottom: 100px;
+      left: -80px;
+      width: 200px;
+      height: 200px;
+      background: #23A3FE;
+      opacity: 0.08;
+      border-radius: 50%;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 50px;
+    }
+
+    .logo { height: 55px; }
+
+    .headline {
+      text-align: right;
+    }
+
+    .headline h1 {
+      font-size: 56px;
+      font-weight: 900;
+      color: #1E3A5F;
+      line-height: 1;
+    }
+
+    .headline h1 span { color: #23A3FE; }
+
+    /* Main card */
+    .main-card {
+      background: white;
+      border-radius: 28px;
+      padding: 55px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.08);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .job-badge {
+      display: inline-block;
+      background: #23A3FE;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+    }
+
+    .job-title {
+      font-size: 48px;
+      font-weight: 900;
+      color: #1E3A5F;
+      margin-bottom: 35px;
+      line-height: 1.15;
+    }
+
+    /* Info boxes */
+    .info-boxes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .info-box {
+      background: #F8FBFF;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .info-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .info-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1E3A5F;
+    }
+
+    .info-value.highlight { color: #23A3FE; }
+
+    /* Skills */
+    .skills-section {
+      flex: 1;
+    }
+
+    .skills-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1E3A5F;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .skill-tag {
+      background: white;
+      border: 2px solid #E8F0F8;
+      color: #1E3A5F;
+      padding: 12px 22px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 35px;
+    }
+
+    .apply-btn {
+      background: #23A3FE;
+      color: white;
+      padding: 18px 45px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .sagan-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-1 { background: #F59E0B; }
+    .dot-2 { background: #10B981; }
+    .dot-3 { background: #3B82F6; }
+    .dot-4 { background: #EF4444; }
+    .dot-5 { background: #9CA3AF; }
+
+    .website {
+      font-size: 15px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="deco-1"></div>
+    <div class="deco-2"></div>
+
+    <div class="content">
+      <div class="header">
+        <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+        <div class="headline">
+          <h1>We Are <span>Hiring</span></h1>
+        </div>
+      </div>
+
+      <div class="main-card">
+        <div class="job-badge">Open Position</div>
+        <h2 class="job-title">{{jobTitle}}</h2>
+
+        <div class="info-boxes">
+          <div class="info-box">
+            <div class="info-icon">💰</div>
+            <div class="info-label">Salary</div>
+            <div class="info-value highlight">{{salary}}</div>
+          </div>
+          <div class="info-box">
+            <div class="info-icon">🌍</div>
+            <div class="info-label">Location</div>
+            <div class="info-value">{{location}}</div>
+          </div>
+          <div class="info-box">
+            <div class="info-icon">🕐</div>
+            <div class="info-label">Schedule</div>
+            <div class="info-value">{{schedule}}</div>
+          </div>
+        </div>
+
+        <div class="skills-section">
+          <div class="skills-title">What We're Looking For</div>
+          <div class="skills-list">
+            {{requirementPills}}
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="apply-btn">Apply Now</div>
+          <div class="footer-right">
+            <div class="sagan-dots">
+              <div class="dot dot-1"></div>
+              <div class="dot dot-2"></div>
+              <div class="dot dot-3"></div>
+              <div class="dot dot-4"></div>
+              <div class="dot dot-5"></div>
+            </div>
+            <div class="website">saganrecruitment.com/career</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

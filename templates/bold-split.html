@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Left side - Colored */
+    .left-side {
+      width: 45%;
+      background: linear-gradient(180deg, {{primary}} 0%, {{secondary}} 100%);
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .left-side::after {
+      content: '';
+      position: absolute;
+      right: -80px;
+      top: 0;
+      bottom: 0;
+      width: 160px;
+      background: linear-gradient(180deg, {{primary}} 0%, {{secondary}} 100%);
+      border-radius: 0 100% 100% 0 / 0 50% 50% 0;
+    }
+
+    .logo {
+      height: 50px;
+      margin-bottom: 50px;
+      filter: brightness(0) invert(1);
+    }
+
+    .big-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 140px;
+      color: white;
+      line-height: 0.85;
+      letter-spacing: -3px;
+    }
+
+    .big-text span {
+      display: block;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 20px;
+      font-weight: 500;
+    }
+
+    /* Right side - White */
+    .right-side {
+      width: 55%;
+      background: #FAFAFA;
+      padding: 50px;
+      padding-left: 100px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Job info */
+    .job-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: {{primary}};
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+
+    .job-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: {{secondary}};
+      line-height: 1.2;
+      margin-bottom: 25px;
+    }
+
+    .salary-box {
+      background: {{accent}};
+      display: inline-block;
+      padding: 15px 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .salary-box .label {
+      font-size: 14px;
+      color: {{secondary}};
+      opacity: 0.8;
+    }
+
+    .salary-box .amount {
+      font-size: 32px;
+      font-weight: 800;
+      color: {{secondary}};
+    }
+
+    .meta-badges {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .meta-badge {
+      font-size: 15px;
+      color: {{secondary}};
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: {{secondary}};
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: {{primary}};
+      border-radius: 2px;
+    }
+
+    .section ul {
+      list-style: none;
+    }
+
+    .section li {
+      font-size: 15px;
+      color: #555;
+      padding: 5px 0;
+      padding-left: 15px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .section li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: {{primary}};
+      font-weight: bold;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .apply-btn {
+      background: {{primary}};
+      color: white;
+      padding: 18px 40px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Left Side -->
+    <div class="left-side">
+      <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan">
+      <div class="big-text">
+        <span>WE</span>
+        <span>ARE</span>
+        <span>HIRING</span>
+      </div>
+      <p class="tagline">Join our global team of talented professionals</p>
+    </div>
+
+    <!-- Right Side -->
+    <div class="right-side">
+      <div class="job-label">Open Position</div>
+      <h1 class="job-title">{{jobTitle}}</h1>
+
+      <div class="salary-box">
+        <div class="label">Monthly Salary</div>
+        <div class="amount">{{salary}}</div>
+      </div>
+
+      <div class="meta-badges">
+        <div class="meta-badge">🏠 100% Remote</div>
+        <div class="meta-badge">🕐 {{schedule}}</div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Responsibilities</h3>
+        <ul>{{responsibilities}}</ul>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Qualifications</h3>
+        <ul>{{qualifications}}</ul>
+      </div>
+
+      <div class="footer">
+        <div class="apply-btn">Apply Now</div>
+        <div class="website">saganrecruitment.com</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

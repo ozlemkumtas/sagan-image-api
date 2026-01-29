@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative circles */
+    .circle-1 {
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 250px;
+      height: 250px;
+      background: #23A3FE;
+      opacity: 0.15;
+      border-radius: 50%;
+    }
+
+    .circle-2 {
+      position: absolute;
+      bottom: 120px;
+      right: 30px;
+      width: 150px;
+      height: 150px;
+      background: #23A3FE;
+      opacity: 0.1;
+      border-radius: 50%;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 50px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 35px;
+    }
+
+    .logo { height: 55px; }
+
+    .headline {
+      text-align: right;
+    }
+
+    .headline h1 {
+      font-size: 52px;
+      font-weight: 900;
+      color: #1E3A5F;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .headline h1 span { color: #23A3FE; }
+
+    .tagline {
+      font-family: 'Caveat', cursive;
+      font-size: 26px;
+      color: #1E3A5F;
+      margin-top: 5px;
+    }
+
+    /* Search bar */
+    .search-bar {
+      background: white;
+      border-radius: 16px;
+      padding: 22px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+      margin-bottom: 25px;
+    }
+
+    .search-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1E3A5F;
+    }
+
+    .search-icon { font-size: 22px; }
+
+    /* Job listings */
+    .jobs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .job-item {
+      background: white;
+      border-radius: 14px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    .job-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-yellow { background: #F59E0B; }
+    .dot-green { background: #10B981; }
+    .dot-blue { background: #3B82F6; }
+    .dot-red { background: #EF4444; }
+    .dot-purple { background: #8B5CF6; }
+
+    .job-info { flex: 1; }
+
+    .job-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1E3A5F;
+      margin-bottom: 4px;
+    }
+
+    .job-salary {
+      font-size: 17px;
+      color: #23A3FE;
+      font-weight: 600;
+    }
+
+    /* Bottom tagline */
+    .bottom-tagline {
+      font-family: 'Caveat', cursive;
+      font-size: 38px;
+      color: #1E3A5F;
+      text-align: center;
+      padding: 25px 0;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #23A3FE;
+      padding: 22px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      color: white;
+    }
+
+    .footer-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .footer-url {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .apply-btn {
+      background: white;
+      color: #1E3A5F;
+      padding: 14px 35px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="circle-1"></div>
+    <div class="circle-2"></div>
+
+    <div class="content">
+      <div class="header">
+        <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+        <div class="headline">
+          <h1>We Are <span>Hiring</span></h1>
+          <div class="tagline">Join our amazing team</div>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-text">Open Positions</span>
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <div class="jobs-list">
+        {{jobItems}}
+      </div>
+
+      <div class="bottom-tagline">Work From Home Opportunities!</div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-left">
+        <div class="footer-title">Visit Our Website to Apply:</div>
+        <div class="footer-url">www.saganrecruitment.com/career</div>
+      </div>
+      <div class="apply-btn">Apply Now</div>
+    </div>
+  </div>
+</body>
+</html>

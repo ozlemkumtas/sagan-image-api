@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: #FAFBFC;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* SAGAN Watermark */
+    .watermark {
+      position: absolute;
+      left: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      writing-mode: vertical-lr;
+      font-size: 220px;
+      font-weight: 900;
+      color: #E8E8E8;
+      letter-spacing: -5px;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 60px;
+      padding-left: 180px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hiring-badge {
+      display: inline-block;
+      background: #23A3FE;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .headline h1 {
+      font-size: 68px;
+      font-weight: 900;
+      color: #1E3A5F;
+      line-height: 0.95;
+    }
+
+    .logo { height: 50px; }
+
+    /* Job section */
+    .job-section {
+      background: white;
+      border-radius: 20px;
+      padding: 45px;
+      box-shadow: 0 8px 35px rgba(0,0,0,0.06);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .job-title {
+      font-size: 38px;
+      font-weight: 800;
+      color: #1E3A5F;
+      margin-bottom: 30px;
+      line-height: 1.2;
+    }
+
+    .job-details {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 18px;
+    }
+
+    .detail-icon {
+      width: 40px;
+      height: 40px;
+      background: #F0F7FF;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .detail-label {
+      color: #888;
+      font-weight: 500;
+      min-width: 100px;
+    }
+
+    .detail-value {
+      color: #1E3A5F;
+      font-weight: 700;
+    }
+
+    .detail-value.highlight { color: #23A3FE; }
+
+    /* Qualifications */
+    .qual-section {
+      flex: 1;
+      margin-top: 20px;
+    }
+
+    .qual-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1E3A5F;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .qual-list {
+      list-style: none;
+    }
+
+    .qual-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 16px;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    .qual-dot {
+      width: 8px;
+      height: 8px;
+      background: #23A3FE;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #23A3FE;
+      padding: 22px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text {
+      color: white;
+      font-size: 16px;
+    }
+
+    .footer-text strong { font-weight: 700; }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .sagan-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+    .dot-1 { background: #F59E0B; }
+    .dot-2 { background: #10B981; }
+    .dot-3 { background: #3B82F6; }
+    .dot-4 { background: #EF4444; }
+    .dot-5 { background: #9CA3AF; }
+
+    .apply-btn {
+      background: white;
+      color: #1E3A5F;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="watermark">SAGAN</div>
+
+    <div class="content">
+      <div class="header">
+        <div class="header-left">
+          <div class="hiring-badge">Join Our Team</div>
+          <div class="headline">
+            <h1>We're<br>Hiring!</h1>
+          </div>
+        </div>
+        <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+      </div>
+
+      <div class="job-section">
+        <h2 class="job-title">{{jobTitle}}</h2>
+
+        <div class="job-details">
+          <div class="detail-row">
+            <div class="detail-icon">💰</div>
+            <span class="detail-label">Salary:</span>
+            <span class="detail-value highlight">{{salary}} / Mo</span>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">🌍</div>
+            <span class="detail-label">Location:</span>
+            <span class="detail-value">{{location}}</span>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">🕐</div>
+            <span class="detail-label">Schedule:</span>
+            <span class="detail-value">{{schedule}}</span>
+          </div>
+        </div>
+
+        <div class="qual-section">
+          <div class="qual-title">Qualifications</div>
+          <ul class="qual-list">
+            {{qualifications}}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-text">
+        <strong>Visit Our Website to Apply:</strong> www.saganrecruitment.com/career
+      </div>
+      <div class="footer-right">
+        <div class="sagan-dots">
+          <div class="dot dot-1"></div>
+          <div class="dot dot-2"></div>
+          <div class="dot dot-3"></div>
+          <div class="dot dot-4"></div>
+          <div class="dot dot-5"></div>
+        </div>
+        <div class="apply-btn">Apply Now</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

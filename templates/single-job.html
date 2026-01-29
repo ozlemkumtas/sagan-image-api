@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(180deg, #F8F8F4 0%, #F0F0EA 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative shapes on right side */
+    .deco-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 100px;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 30px;
+    }
+
+    .deco-bar {
+      background: {{primary}};
+      border-radius: 40px 0 0 40px;
+      margin-left: auto;
+    }
+
+    .deco-bar:nth-child(1) { width: 280px; height: 18%; opacity: 0.4; }
+    .deco-bar:nth-child(2) { width: 300px; height: 25%; opacity: 0.6; }
+    .deco-bar:nth-child(3) { width: 250px; height: 15%; opacity: 0.3; }
+    .deco-bar:nth-child(4) { width: 290px; height: 20%; opacity: 0.7; }
+    .deco-bar:nth-child(5) { width: 260px; height: 15%; opacity: 0.5; }
+
+    /* Content area */
+    .content {
+      padding: 50px;
+      padding-right: 380px;
+      height: calc(100% - 100px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .headline {
+      line-height: 1;
+    }
+
+    .headline-top {
+      font-size: 58px;
+      font-weight: 800;
+      color: {{primary}};
+      display: block;
+    }
+
+    .headline-bottom {
+      font-family: 'Playfair Display', serif;
+      font-size: 80px;
+      font-weight: 700;
+      font-style: italic;
+      color: {{secondary}};
+      display: block;
+      margin-top: -5px;
+    }
+
+    .logo {
+      height: 55px;
+      position: absolute;
+      top: 50px;
+      right: 360px;
+    }
+
+    /* Job card */
+    .job-card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+    }
+
+    .job-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: {{secondary}};
+      line-height: 1.2;
+      margin-bottom: 15px;
+    }
+
+    .job-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .salary-label {
+      font-size: 18px;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .salary {
+      font-size: 34px;
+      font-weight: 800;
+      color: {{secondary}};
+    }
+
+    .badges {
+      display: flex;
+      gap: 25px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      font-weight: 600;
+      color: {{secondary}};
+    }
+
+    /* Sections */
+    .sections {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: {{secondary}};
+      margin-bottom: 10px;
+    }
+
+    .section ul {
+      list-style: none;
+    }
+
+    .section li {
+      font-size: 17px;
+      color: #444;
+      padding: 4px 0 4px 22px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .section li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 10px;
+      height: 10px;
+      background: {{primary}};
+      border-radius: 50%;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: {{primary}};
+      padding: 25px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .apply-btn {
+      background: white;
+      color: {{secondary}};
+      padding: 16px 45px;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 20px;
+      color: white;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Decorative bars on right -->
+    <div class="deco-right">
+      <div class="deco-bar"></div>
+      <div class="deco-bar"></div>
+      <div class="deco-bar"></div>
+      <div class="deco-bar"></div>
+      <div class="deco-bar"></div>
+    </div>
+
+    <!-- Logo -->
+    <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Header -->
+      <div class="header">
+        <div class="headline">
+          <span class="headline-top">We are</span>
+          <span class="headline-bottom">Hiring!</span>
+        </div>
+      </div>
+
+      <!-- Job Card -->
+      <div class="job-card">
+        <h1 class="job-title">{{jobTitle}}</h1>
+        <div class="job-meta">
+          <div class="salary-label">Salary Range:</div>
+          <div class="salary">{{salary}} per month</div>
+          <div class="badges">
+            <div class="badge">🏠 100% REMOTE</div>
+            <div class="badge">🕐 {{schedule}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sections -->
+      <div class="sections">
+        <div class="section">
+          <h3 class="section-title">Key Responsibilities</h3>
+          <ul>{{responsibilities}}</ul>
+        </div>
+
+        <div class="section">
+          <h3 class="section-title">Qualifications</h3>
+          <ul>{{qualifications}}</ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="apply-btn">Apply Now</div>
+      <div class="website">www.saganrecruitment.com/career</div>
+    </div>
+  </div>
+</body>
+</html>

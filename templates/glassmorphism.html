@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(135deg, {{primary}} 0%, {{secondary}} 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Floating blobs */
+    .blob-1 {
+      position: absolute;
+      top: -150px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: {{accent}};
+      border-radius: 50%;
+      opacity: 0.4;
+      filter: blur(60px);
+    }
+
+    .blob-2 {
+      position: absolute;
+      bottom: -200px;
+      right: -150px;
+      width: 600px;
+      height: 600px;
+      background: {{primary}};
+      border-radius: 50%;
+      opacity: 0.5;
+      filter: blur(80px);
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 50px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      height: 70px;
+    }
+
+    .headline {
+      text-align: right;
+    }
+
+    .headline-top {
+      font-size: 64px;
+      font-weight: 800;
+      color: white;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    .headline-bottom {
+      font-size: 84px;
+      font-weight: 900;
+      color: white;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 35px 40px;
+      margin-bottom: 25px;
+    }
+
+    .job-title {
+      font-size: 44px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .salary {
+      font-size: 42px;
+      font-weight: 800;
+      color: {{accent}};
+      margin-bottom: 15px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 20px;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.2);
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-size: 20px;
+      color: white;
+      font-weight: 600;
+    }
+
+    /* Sections */
+    .sections {
+      flex: 1;
+      display: flex;
+      gap: 30px;
+    }
+
+    .section {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px 30px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: {{accent}};
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section ul {
+      list-style: none;
+    }
+
+    .section li {
+      font-size: 20px;
+      color: rgba(255,255,255,0.95);
+      padding: 10px 0 10px 25px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .section li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: {{accent}};
+      font-size: 24px;
+    }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 25px;
+    }
+
+    .apply-btn {
+      background: white;
+      color: {{secondary}};
+      padding: 22px 55px;
+      border-radius: 15px;
+      font-size: 26px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 22px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+
+    <div class="content">
+      <div class="header">
+        <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan">
+        <div class="headline">
+          <span class="headline-top">We Are</span>
+          <span class="headline-bottom">Hiring!</span>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <h1 class="job-title">{{jobTitle}}</h1>
+        <div class="salary">{{salary}} / month</div>
+        <div class="badges">
+          <span class="badge">🏠 100% Remote</span>
+          <span class="badge">🕐 {{schedule}}</span>
+        </div>
+      </div>
+
+      <div class="sections">
+        <div class="section">
+          <h3 class="section-title">Key Responsibilities</h3>
+          <ul>{{responsibilities}}</ul>
+        </div>
+        <div class="section">
+          <h3 class="section-title">Qualifications</h3>
+          <ul>{{qualifications}}</ul>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="apply-btn">Apply Now</div>
+        <div class="website">www.saganrecruitment.com/career</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

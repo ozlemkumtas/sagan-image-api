@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: #FAFAFA;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* SAGAN Watermark - Vertical */
+    .sagan-watermark {
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 200px;
+      font-weight: 900;
+      color: #E0E0E0;
+      letter-spacing: -10px;
+      text-transform: uppercase;
+      z-index: 1;
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* Person Photo */
+    .person-photo {
+      position: absolute;
+      left: 80px;
+      top: 120px;
+      width: 380px;
+      height: 480px;
+      object-fit: cover;
+      object-position: top;
+      z-index: 5;
+    }
+
+    /* Content - Right side */
+    .content {
+      position: absolute;
+      right: 40px;
+      top: 40px;
+      width: 580px;
+      z-index: 10;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .headline {
+      font-size: 72px;
+      font-weight: 900;
+      color: #1E3A5F;
+      line-height: 0.9;
+    }
+
+    .headline .were {
+      display: block;
+    }
+
+    .headline .hiring {
+      display: block;
+      font-size: 85px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: {{primary}};
+      color: white;
+      padding: 6px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    /* Job Card */
+    .job-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+      margin-top: 15px;
+    }
+
+    .job-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #1E3A5F;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .job-meta {
+      margin-bottom: 15px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .meta-item strong {
+      color: #1E3A5F;
+    }
+
+    .meta-icon {
+      font-size: 16px;
+    }
+
+    .job-code {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1E3A5F;
+      margin-bottom: 8px;
+    }
+
+    .section-list {
+      font-size: 12px;
+      color: #444;
+      line-height: 1.5;
+      padding-left: 15px;
+    }
+
+    .section-list li {
+      margin-bottom: 4px;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: {{primary}};
+      padding: 20px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .footer-text {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .footer-text span {
+      display: block;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    /* Logo bottom right */
+    .logo-bottom {
+      position: absolute;
+      bottom: 100px;
+      right: 40px;
+      height: 45px;
+      z-index: 15;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- SAGAN Watermark -->
+    <div class="sagan-watermark">SAGAN</div>
+
+    <!-- Person Photo -->
+    <img src="{{personPhotoUrl}}" class="person-photo" alt="Professional">
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Header -->
+      <div class="header">
+        <div class="badge">Join Our Team</div>
+        <div class="headline">
+          <span class="were">WE'RE</span>
+          <span class="hiring">HIRING!</span>
+        </div>
+      </div>
+
+      <!-- Job Card -->
+      <div class="job-card">
+        <h2 class="job-title">{{jobTitle}}</h2>
+
+        <div class="job-meta">
+          <div class="meta-item">
+            <span class="meta-icon">💰</span>
+            <span><strong>Salary Range:</strong> {{salary}} / Mo</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">🏠</span>
+            <span>{{location}}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">🕐</span>
+            <span>{{schedule}}</span>
+          </div>
+        </div>
+
+        <div class="job-code">Job Code: {{jobCode}}</div>
+
+        <div class="section">
+          <div class="section-title">Key Responsibilities</div>
+          <ul class="section-list">
+            {{responsibilitiesList}}
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Qualifications</div>
+          <ul class="section-list">
+            {{qualificationsList}}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo bottom -->
+    <img src="data:image/png;base64,{{logoBase64}}" class="logo-bottom" alt="Sagan">
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-text">
+        Visit Our Website to Apply:
+        <span>www.saganrecruitment.com/career</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

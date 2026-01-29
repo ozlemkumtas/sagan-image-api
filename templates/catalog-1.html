@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: #FFFFFF;
+      position: relative;
+      overflow: hidden;
+      padding: 60px;
+    }
+
+    /* Blue top section */
+    .blue-section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 420px;
+      background: #23A3FE;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .logo { height: 50px; }
+
+    .badge {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Headline */
+    .headline {
+      color: white;
+      margin-bottom: 60px;
+    }
+
+    .headline h1 {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    /* Job Card */
+    .job-card {
+      background: white;
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .job-title {
+      font-size: 42px;
+      font-weight: 800;
+      color: #1E3A5F;
+      margin-bottom: 30px;
+      line-height: 1.2;
+    }
+
+    .job-meta {
+      display: flex;
+      gap: 50px;
+      margin-bottom: 35px;
+      padding-bottom: 35px;
+      border-bottom: 2px solid #F0F0F0;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-label {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .meta-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1E3A5F;
+    }
+
+    .meta-value.highlight { color: #23A3FE; }
+
+    /* Requirements */
+    .requirements {
+      flex: 1;
+    }
+
+    .req-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1E3A5F;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .req-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .req-item {
+      background: #F5F9FF;
+      color: #1E3A5F;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 35px;
+      padding-top: 35px;
+      border-top: 2px solid #F0F0F0;
+    }
+
+    .apply-btn {
+      background: #23A3FE;
+      color: white;
+      padding: 20px 50px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 16px;
+      color: #888;
+    }
+
+    /* Dots */
+    .sagan-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot { width: 14px; height: 14px; border-radius: 50%; }
+    .dot-1 { background: #F59E0B; }
+    .dot-2 { background: #10B981; }
+    .dot-3 { background: #3B82F6; }
+    .dot-4 { background: #EF4444; }
+    .dot-5 { background: #9CA3AF; }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="blue-section"></div>
+
+    <div class="content">
+      <div class="header">
+        <img src="data:image/png;base64,{{logoLightBase64}}" class="logo" alt="Sagan" style="filter: brightness(0) invert(1);">
+        <div class="badge">We're Hiring</div>
+      </div>
+
+      <div class="headline">
+        <h1>Join Our Team</h1>
+      </div>
+
+      <div class="job-card">
+        <h2 class="job-title">{{jobTitle}}</h2>
+
+        <div class="job-meta">
+          <div class="meta-item">
+            <span class="meta-label">Salary</span>
+            <span class="meta-value highlight">{{salary}}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Location</span>
+            <span class="meta-value">{{location}}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Schedule</span>
+            <span class="meta-value">{{schedule}}</span>
+          </div>
+        </div>
+
+        <div class="requirements">
+          <div class="req-title">Requirements</div>
+          <div class="req-grid">
+            {{requirementPills}}
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="apply-btn">Apply Now</div>
+          <div class="sagan-dots">
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+            <div class="dot dot-4"></div>
+            <div class="dot dot-5"></div>
+          </div>
+          <div class="website">saganrecruitment.com/career</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

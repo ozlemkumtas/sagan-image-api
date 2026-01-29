@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      background: {{primary}};
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Background pattern - dots */
+    .bg-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px);
+      background-size: 40px 40px;
+    }
+
+    /* Main card */
+    .main-card {
+      position: relative;
+      z-index: 10;
+      background: white;
+      border-radius: 30px;
+      padding: 60px;
+      width: 850px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+    }
+
+    /* Logo */
+    .logo {
+      height: 50px;
+      margin-bottom: 40px;
+    }
+
+    /* Badge */
+    .hiring-badge {
+      display: inline-block;
+      background: {{accent}};
+      color: {{secondary}};
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+    }
+
+    /* Job title */
+    .job-title {
+      font-size: 52px;
+      font-weight: 900;
+      color: {{secondary}};
+      line-height: 1.1;
+      margin-bottom: 30px;
+    }
+
+    /* Info grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: {{background}};
+      border-radius: 20px;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: {{secondary}};
+    }
+
+    /* Key points */
+    .key-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .point {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border: 2px solid {{background}};
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      color: {{secondary}};
+      font-weight: 500;
+    }
+
+    .point-dot {
+      width: 10px;
+      height: 10px;
+      background: {{primary}};
+      border-radius: 50%;
+    }
+
+    /* Footer */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .apply-btn {
+      background: {{primary}};
+      color: white;
+      padding: 20px 50px;
+      border-radius: 15px;
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .website {
+      font-size: 16px;
+      color: #888;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Background pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Main Card -->
+    <div class="main-card">
+      <img src="data:image/png;base64,{{logoBase64}}" class="logo" alt="Sagan">
+
+      <div class="hiring-badge">We're Hiring</div>
+
+      <h1 class="job-title">{{jobTitle}}</h1>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-icon">💰</div>
+          <div class="info-label">Salary</div>
+          <div class="info-value">{{salary}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">🌍</div>
+          <div class="info-label">Location</div>
+          <div class="info-value">{{location}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">🕐</div>
+          <div class="info-label">Schedule</div>
+          <div class="info-value">{{schedule}}</div>
+        </div>
+      </div>
+
+      <div class="key-points">
+        {{keyPoints}}
+      </div>
+
+      <div class="card-footer">
+        <div class="apply-btn">Apply Now</div>
+        <div class="website">saganrecruitment.com/career</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
