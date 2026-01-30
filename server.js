@@ -23,55 +23,27 @@ const PERSON_PHOTOS = [
   'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&crop=face'
 ];
 
-// Color themes - Sagan branding (updated palette)
-const THEMES = {
-  blue: {
-    primary: '#25a2ff',      // Sagan mavi
-    secondary: '#093a3e',    // Koyu teal (başlıklar)
-    background: '#ede9e5',   // Krem arka plan
-    accent: '#25a2ff'        // Sagan mavi
-  },
-  purple: {
-    primary: '#796aff',      // Mor
-    secondary: '#093a3e',    // Koyu teal
-    background: '#e6e1dc',   // Açık bej
-    accent: '#796aff'        // Mor
-  },
-  coral: {
-    primary: '#ff7455',      // Coral
-    secondary: '#093a3e',    // Koyu teal
-    background: '#ede9e5',   // Krem
-    accent: '#ff7455'        // Coral
-  },
-  green: {
-    primary: '#73e491',      // Yeşil
-    secondary: '#093a3e',    // Koyu teal
-    background: '#dbd7d1',   // Bej
-    accent: '#73e491'        // Yeşil
-  },
-  gold: {
-    primary: '#f5b801',      // Altın
-    secondary: '#093a3e',    // Koyu teal
-    background: '#ede9e5',   // Krem
-    accent: '#f5b801'        // Altın
-  },
-  teal: {
-    primary: '#093a3e',      // Koyu teal
-    secondary: '#ffffff',    // Beyaz yazı
-    background: '#093a3e',   // Koyu teal arka plan
-    accent: '#25a2ff'        // Mavi vurgu
-  },
-  warm: {
-    primary: '#611f2c',      // Bordo
-    secondary: '#611f2c',    // Bordo
-    background: '#cac1b4',   // Sıcak bej
-    accent: '#ff7455'        // Coral vurgu
-  }
+// Sagan Brand Theme - Always Blue
+const THEME = {
+  primary: '#25a2ff',      // Sagan mavi
+  secondary: '#093a3e',    // Koyu teal (başlıklar)
+  background: '#ede9e5',   // Krem arka plan
+  accent: '#25a2ff',       // Sagan mavi
+  text: '#000000',         // Siyah metin
+  lightBg: '#f5f5f5'       // Açık arka plan
 };
 
-const THEME_NAMES = Object.keys(THEMES);
-// Updated dot colors from brand palette
-const BULLET_COLORS = ['#f5b801', '#73e491', '#25a2ff', '#ff7455', '#796aff', '#611f2c'];
+// Dot Styles - 5'li nokta renk kombinasyonları
+const DOT_STYLES = {
+  default: ['#f5b801', '#73e491', '#25a2ff', '#ff7455', '#9e988f'],  // Sarı, Yeşil, Mavi, Coral, Gri
+  vibrant: ['#796aff', '#25a2ff', '#73e491', '#ff7455', '#f5b801'],  // Mor, Mavi, Yeşil, Coral, Altın
+  warm: ['#ff7455', '#f5b801', '#611f2c', '#9e988f', '#cac1b4'],     // Coral, Altın, Bordo, Gri tonları
+  cool: ['#796aff', '#25a2ff', '#093a3e', '#73e491', '#9e988f'],     // Mor, Mavi, Teal, Yeşil, Gri
+  mono: ['#093a3e', '#25a2ff', '#73e491', '#9e988f', '#dbd7d1'],     // Teal, Mavi, Yeşil, Gri tonları
+  none: []  // Nokta yok
+};
+
+const DOT_STYLE_NAMES = Object.keys(DOT_STYLES);
 
 function randomChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -204,7 +176,7 @@ app.post('/generate', async (req, res) => {
 
       // Options
       template = 'auto',
-      colorTheme = 'auto'
+      dotStyle = 'default'
     } = req.body;
 
     // Select template
@@ -218,11 +190,13 @@ app.post('/generate', async (req, res) => {
       }
     }
 
-    // Select theme
-    const selectedTheme = colorTheme === 'auto' ? randomChoice(THEME_NAMES) : colorTheme;
-    const theme = THEMES[selectedTheme] || THEMES.blue;
+    // Use Sagan brand theme (always blue)
+    const theme = THEME;
 
-    console.log(`Using template: ${selectedTemplate}, theme: ${selectedTheme}`);
+    // Select dot style
+    const selectedDotStyle = DOT_STYLES[dotStyle] || DOT_STYLES.default;
+
+    console.log(`Using template: ${selectedTemplate}, dotStyle: ${dotStyle}`);
 
     // Read template
     const templatePath = path.join(__dirname, 'templates', `${selectedTemplate}.html`);
@@ -355,7 +329,7 @@ app.post('/generate', async (req, res) => {
     res.set({
       'Content-Type': 'image/png',
       'X-Template': selectedTemplate,
-      'X-Theme': selectedTheme
+      'X-DotStyle': dotStyle
     });
     res.send(imageBuffer);
 
@@ -371,7 +345,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     templates: TEMPLATES,
-    themes: THEME_NAMES
+    dotStyles: DOT_STYLE_NAMES
   });
 });
 
@@ -379,33 +353,40 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
   res.json({
     name: 'Sagan Image Generator API',
-    version: '1.0.0',
+    version: '2.0.0',
+    brandColor: '#25a2ff',
     templates: TEMPLATES,
-    themes: THEME_NAMES,
+    dotStyles: DOT_STYLE_NAMES,
     examples: {
       singleJob: {
-        template: 'single-job',
-        jobTitle: 'Video Editor (HR87863)',
+        template: 'catalog-1',
+        jobTitle: 'Video Editor',
         salary: '$1,200',
-        responsibilities: ['Edit videos', 'Follow guidelines'],
-        qualifications: ['1+ year experience', 'Premiere Pro'],
-        colorTheme: 'blue'
+        location: 'Remote',
+        schedule: 'Full-time',
+        dotStyle: 'default'
+      },
+      withDescription: {
+        template: 'catalog-1',
+        jobTitle: 'Marketing Manager',
+        description: 'Job Title: Marketing Manager\nLocation: Remote\nSalary Range: 2000 - 2500 USD/month',
+        dotStyle: 'vibrant'
       },
       multiJob: {
-        template: 'multi-job',
+        template: 'catalog-multi',
         jobs: [
           { title: 'Video Editor', salary: '$1,200' },
           { title: 'Marketing Manager', salary: '$2,500' },
           { title: 'Sales Rep', salary: '$1,800' }
         ],
-        colorTheme: 'green'
+        dotStyle: 'warm'
       },
-      creative: {
-        template: 'creative',
+      noDots: {
+        template: 'catalog-1',
         jobTitle: 'Content Creator',
         salary: '$750',
-        location: 'South Africa',
-        colorTheme: 'purple'
+        location: 'Remote',
+        dotStyle: 'none'
       }
     }
   });
@@ -415,13 +396,14 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`
 ====================================
-  Sagan Image Generator API
+  Sagan Image Generator API v2.0
 ====================================
 
   Running on: http://localhost:${PORT}
+  Brand Color: #25a2ff (Sagan Blue)
 
   Templates: ${TEMPLATES.join(', ')}
-  Themes: ${THEME_NAMES.join(', ')}
+  Dot Styles: ${DOT_STYLE_NAMES.join(', ')}
 
   Endpoints:
   - GET  /         → API info & examples
