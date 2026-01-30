@@ -3,14 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    /* PP Mori - Headers */
+    @font-face {
+      font-family: 'PP Mori';
+      src: url(data:font/otf;base64,{{fontPPMoriSemiBold}}) format('opentype');
+      font-weight: 600;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'PP Mori';
+      src: url(data:font/otf;base64,{{fontPPMoriRegular}}) format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    /* PP Neue Montreal - Body */
+    @font-face {
+      font-family: 'PP Neue Montreal';
+      src: url(data:font/otf;base64,{{fontPPNeueMontreal}}) format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       width: 1080px;
       height: 1080px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'PP Neue Montreal', sans-serif;
+    }
+
+    h1, h2, .hiring-badge, .apply-btn, .qual-title {
+      font-family: 'PP Mori', sans-serif;
     }
 
     .poster {
