@@ -23,36 +23,55 @@ const PERSON_PHOTOS = [
   'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&crop=face'
 ];
 
-// Color themes - Sagan branding (#23A3FE)
+// Color themes - Sagan branding (updated palette)
 const THEMES = {
-  sagan: {
-    primary: '#23A3FE',      // Sagan mavi - ANA RENK
-    secondary: '#1E3A5F',    // Koyu mavi (başlıklar)
-    background: '#EBF5FF',   // Açık mavi arka plan
-    accent: '#23A3FE'        // Sagan mavi
+  blue: {
+    primary: '#25a2ff',      // Sagan mavi
+    secondary: '#093a3e',    // Koyu teal (başlıklar)
+    background: '#ede9e5',   // Krem arka plan
+    accent: '#25a2ff'        // Sagan mavi
   },
-  saganLight: {
-    primary: '#23A3FE',      // Sagan mavi
-    secondary: '#1E3A5F',    // Koyu mavi
-    background: '#F8FAFC',   // Neredeyse beyaz
-    accent: '#60B8FF'        // Açık sagan mavi
+  purple: {
+    primary: '#796aff',      // Mor
+    secondary: '#093a3e',    // Koyu teal
+    background: '#e6e1dc',   // Açık bej
+    accent: '#796aff'        // Mor
   },
-  saganDark: {
-    primary: '#23A3FE',      // Sagan mavi
-    secondary: '#FFFFFF',    // Beyaz yazı (koyu arka plan için)
-    background: '#1E3A5F',   // Koyu mavi arka plan
-    accent: '#60B8FF'        // Açık mavi vurgu
+  coral: {
+    primary: '#ff7455',      // Coral
+    secondary: '#093a3e',    // Koyu teal
+    background: '#ede9e5',   // Krem
+    accent: '#ff7455'        // Coral
   },
-  saganWarm: {
-    primary: '#23A3FE',      // Sagan mavi
-    secondary: '#1E3A5F',    // Koyu mavi
-    background: '#FDF8F3',   // Sıcak bej/krem (görsel 2'deki gibi)
-    accent: '#23A3FE'        // Sagan mavi
+  green: {
+    primary: '#73e491',      // Yeşil
+    secondary: '#093a3e',    // Koyu teal
+    background: '#dbd7d1',   // Bej
+    accent: '#73e491'        // Yeşil
+  },
+  gold: {
+    primary: '#f5b801',      // Altın
+    secondary: '#093a3e',    // Koyu teal
+    background: '#ede9e5',   // Krem
+    accent: '#f5b801'        // Altın
+  },
+  teal: {
+    primary: '#093a3e',      // Koyu teal
+    secondary: '#ffffff',    // Beyaz yazı
+    background: '#093a3e',   // Koyu teal arka plan
+    accent: '#25a2ff'        // Mavi vurgu
+  },
+  warm: {
+    primary: '#611f2c',      // Bordo
+    secondary: '#611f2c',    // Bordo
+    background: '#cac1b4',   // Sıcak bej
+    accent: '#ff7455'        // Coral vurgu
   }
 };
 
 const THEME_NAMES = Object.keys(THEMES);
-const BULLET_COLORS = ['#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6'];
+// Updated dot colors from brand palette
+const BULLET_COLORS = ['#f5b801', '#73e491', '#25a2ff', '#ff7455', '#796aff', '#611f2c'];
 
 function randomChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
