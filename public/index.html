@@ -118,6 +118,30 @@
               Generate Images
             </button>
           </div>
+
+          <!-- AI Custom Template Panel -->
+          <div class="panel ai-panel">
+            <div class="panel-header">
+              <h2>AI Template Creator</h2>
+            </div>
+            <div class="ai-content">
+              <p class="ai-description">Describe how you want your job post to look. AI will generate a custom template.</p>
+              <textarea id="aiPrompt" placeholder="Example: Minimalist design with dark blue header, large job title, salary highlighted in yellow badge, clean white background with subtle gradient..."></textarea>
+              <button class="btn-ai" id="aiGenerateBtn" disabled>
+                ✨ Generate Custom Template
+              </button>
+              <div class="ai-preview" id="aiPreview">
+                <div class="ai-placeholder">
+                  <span>🎨</span>
+                  <p>AI preview will appear here</p>
+                </div>
+              </div>
+              <div class="ai-actions" id="aiActions" style="display:none;">
+                <button class="btn-secondary" onclick="regenerateAI()">↻ Regenerate</button>
+                <button class="btn-primary" onclick="useAITemplate()">Use This Template</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

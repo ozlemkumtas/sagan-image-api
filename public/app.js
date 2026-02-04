@@ -9,7 +9,8 @@ let state = {
   template: 'catalog-1',
   dotStyle: 'default',
   outputType: 'single',
-  generatedImages: []
+  generatedImages: [],
+  aiTemplateHtml: null
 };
 
 // Initialize
@@ -381,6 +382,109 @@ function showToast(message, type = '') {
   }, 3000);
 }
 
+// AI Template Generation
+const aiPromptEl = document.getElementById('aiPrompt');
+const aiGenerateBtn = document.getElementById('aiGenerateBtn');
+
+// Enable AI button when there's text and a job selected
+aiPromptEl.addEventListener('input', updateAIButton);
+
+function updateAIButton() {
+  const hasPrompt = aiPromptEl.value.trim().length > 10;
+  const hasJob = state.selectedJobs.size > 0;
+  aiGenerateBtn.disabled = !(hasPrompt && hasJob);
+}
+
+// Also update when job selection changes
+const originalUpdateSelectedInfo = updateSelectedInfo;
+updateSelectedInfo = function() {
+  originalUpdateSelectedInfo();
+  updateAIButton();
+};
+
+aiGenerateBtn.addEventListener('click', generateAITemplate);
+
+async function generateAITemplate() {
+  const prompt = aiPromptEl.value.trim();
+  const selectedJobData = state.jobs.filter(job => state.selectedJobs.has(job.id));
+
+  if (!prompt || selectedJobData.length === 0) return;
+
+  const job = selectedJobData[0]; // Use first selected job for preview
+
+  aiGenerateBtn.disabled = true;
+  aiGenerateBtn.textContent = '✨ Generating...';
+
+  document.getElementById('aiPreview').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>AI is creating your template...</p>
+    </div>
+  `;
+
+  try {
+    const response = await fetch(`${API_URL}/api/ai-template`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        job,
+        dotStyle: state.dotStyle
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to generate');
+    }
+
+    const data = await response.json();
+
+    if (data.image) {
+      state.aiTemplateHtml = data.html;
+      document.getElementById('aiPreview').innerHTML = `
+        <img src="data:image/png;base64,${data.image}" alt="AI Generated Template">
+      `;
+      document.getElementById('aiActions').style.display = 'flex';
+      showToast('Template generated!', 'success');
+    } else {
+      throw new Error('No image returned');
+    }
+
+  } catch (error) {
+    console.error('AI Error:', error);
+    document.getElementById('aiPreview').innerHTML = `
+      <div class="ai-placeholder">
+        <span>⚠️</span>
+        <p>${error.message || 'Failed to generate. Try again.'}</p>
+      </div>
+    `;
+    showToast('AI generation failed', 'error');
+  } finally {
+    aiGenerateBtn.disabled = false;
+    aiGenerateBtn.textContent = '✨ Generate Custom Template';
+    updateAIButton();
+  }
+}
+
+function regenerateAI() {
+  generateAITemplate();
+}
+
+function useAITemplate() {
+  if (!state.aiTemplateHtml) return;
+
+  // For now, just download the generated image
+  const img = document.querySelector('#aiPreview img');
+  if (img) {
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = 'sagan-custom-template.png';
+    link.click();
+    showToast('Template downloaded!', 'success');
+  }
+}
+
 // Expose to global
 window.toggleJob = toggleJob;
 window.selectTemplate = selectTemplate;
@@ -388,3 +492,5 @@ window.downloadImage = downloadImage;
 window.downloadAll = downloadAll;
 window.closeModal = closeModal;
 window.loadJobs = loadJobs;
+window.regenerateAI = regenerateAI;
+window.useAITemplate = useAITemplate;

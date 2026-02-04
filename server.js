@@ -358,12 +358,121 @@ app.get('/api/template-preview/:templateId', async (req, res) => {
   }
 });
 
-// AI Template generation (placeholder - requires Claude API)
+// AI Template generation
 app.post('/api/ai-template', async (req, res) => {
-  res.status(501).json({
-    error: 'AI template generation not yet implemented',
-    message: 'This feature requires Claude API integration'
-  });
+  let browser = null;
+
+  try {
+    const { prompt, job, dotStyle = 'default' } = req.body;
+
+    if (!prompt || !job) {
+      return res.status(400).json({ error: 'Prompt and job data required' });
+    }
+
+    const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+
+    if (!ANTHROPIC_API_KEY) {
+      return res.status(400).json({
+        error: 'AI not configured',
+        message: 'Add ANTHROPIC_API_KEY to Railway environment variables'
+      });
+    }
+
+    const selectedDotStyle = DOT_STYLES[dotStyle] || DOT_STYLES.default;
+    const dotsCSS = selectedDotStyle.length > 0 ?
+      selectedDotStyle.map((color, i) => `.dot-${i+1} { background: ${color}; }`).join('\n') : '';
+
+    // Call Claude API to generate HTML template
+    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        messages: [{
+          role: 'user',
+          content: `Create an HTML template for a LinkedIn job posting image. The template must be exactly 1080x1080 pixels.
+
+USER'S DESIGN REQUEST:
+${prompt}
+
+JOB DATA TO DISPLAY:
+- Job Title: ${job.title}
+- Salary: ${job.salary}
+- Location: ${job.location}
+- Schedule: ${job.schedule}
+- Job Code: ${job.jobCode || ''}
+- Responsibilities: ${(job.responsibilities || []).join(', ')}
+- Qualifications: ${(job.qualifications || []).join(', ')}
+
+BRAND GUIDELINES:
+- Primary color: #25a2ff (Sagan blue)
+- Secondary color: #093a3e (dark teal)
+- Accent color: #f5b801 (yellow/gold)
+- Background: #ede9e5 (cream) or white
+- Use clean, modern, professional design
+- Include "Apply Now" button
+- Include website: www.saganrecruitment.com/jobs/
+
+REQUIRED:
+- Output ONLY the complete HTML code, nothing else
+- Must include <!DOCTYPE html> and be self-contained
+- Size must be exactly 1080x1080px
+- Use embedded CSS (no external files)
+- Include 5 small decorative dots at bottom using these colors:
+${dotsCSS}
+
+Generate the complete HTML now:`
+        }]
+      })
+    });
+
+    if (!claudeResponse.ok) {
+      const error = await claudeResponse.json();
+      console.error('Claude API error:', error);
+      throw new Error('AI service error');
+    }
+
+    const claudeData = await claudeResponse.json();
+    let html = claudeData.content[0].text;
+
+    // Extract HTML if wrapped in code blocks
+    const htmlMatch = html.match(/```html\n?([\s\S]*?)```/) || html.match(/<!DOCTYPE html>[\s\S]*/i);
+    if (htmlMatch) {
+      html = htmlMatch[1] || htmlMatch[0];
+    }
+
+    // Ensure it starts with DOCTYPE
+    if (!html.trim().toLowerCase().startsWith('<!doctype')) {
+      html = '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"></head><body>' + html + '</body></html>';
+    }
+
+    // Render to image
+    browser = await chromium.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setViewportSize({ width: 1080, height: 1080 });
+    await page.setContent(html, { waitUntil: 'load' });
+    await page.waitForTimeout(500);
+
+    const imageBuffer = await page.screenshot({ type: 'png' });
+    await browser.close();
+    browser = null;
+
+    res.json({
+      success: true,
+      image: imageBuffer.toString('base64'),
+      html: html
+    });
+
+  } catch (error) {
+    console.error('AI template error:', error);
+    if (browser) await browser.close();
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // ============================================
