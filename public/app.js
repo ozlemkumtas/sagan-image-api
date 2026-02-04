@@ -335,7 +335,10 @@ function downloadAll() {
 
 // Load Templates
 function loadTemplates() {
-  const templates = [
+  // Get hidden templates from localStorage
+  const hiddenTemplates = JSON.parse(localStorage.getItem('hiddenTemplates') || '[]');
+
+  const allTemplates = [
     { id: 'catalog-1', name: 'Catalog 1' },
     { id: 'catalog-2', name: 'Catalog 2' },
     { id: 'catalog-3', name: 'Catalog 3' },
@@ -346,17 +349,53 @@ function loadTemplates() {
     { id: 'split-screen', name: 'Split Screen' }
   ];
 
+  // Filter out hidden templates
+  const templates = allTemplates.filter(t => !hiddenTemplates.includes(t.id));
+
   const grid = document.getElementById('templatesGrid');
+
+  if (templates.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+        </svg>
+        <p>All templates hidden</p>
+        <button class="btn-secondary" onclick="resetTemplates()" style="margin-top:12px;">Restore All</button>
+      </div>
+    `;
+    return;
+  }
+
   grid.innerHTML = templates.map(t => `
-    <div class="template-card" onclick="selectTemplate('${t.id}')">
-      <div class="template-preview">
+    <div class="template-card">
+      <button class="template-delete" onclick="event.stopPropagation(); hideTemplate('${t.id}')" title="Hide template">×</button>
+      <div class="template-preview" onclick="selectTemplate('${t.id}')">
         <img src="${API_URL}/api/template-preview/${t.id}"
              alt="${t.name}"
              onerror="this.style.display='none'">
       </div>
-      <div class="template-info">${t.name}</div>
+      <div class="template-info" onclick="selectTemplate('${t.id}')">${t.name}</div>
     </div>
   `).join('');
+}
+
+// Hide template
+function hideTemplate(id) {
+  const hiddenTemplates = JSON.parse(localStorage.getItem('hiddenTemplates') || '[]');
+  if (!hiddenTemplates.includes(id)) {
+    hiddenTemplates.push(id);
+    localStorage.setItem('hiddenTemplates', JSON.stringify(hiddenTemplates));
+  }
+  loadTemplates();
+  showToast('Template hidden');
+}
+
+// Reset all templates
+function resetTemplates() {
+  localStorage.removeItem('hiddenTemplates');
+  loadTemplates();
+  showToast('All templates restored');
 }
 
 function selectTemplate(id) {
@@ -442,11 +481,13 @@ async function generateAITemplate() {
 
     if (data.image) {
       state.aiTemplateHtml = data.html;
-      document.getElementById('aiPreview').innerHTML = `
+      const previewEl = document.getElementById('aiPreview');
+      previewEl.classList.add('has-image');
+      previewEl.innerHTML = `
         <img src="data:image/png;base64,${data.image}" alt="AI Generated Template">
       `;
       document.getElementById('aiActions').style.display = 'flex';
-      showToast('Template generated!', 'success');
+      showToast('Design generated!', 'success');
     } else {
       throw new Error('No image returned');
     }
@@ -494,3 +535,5 @@ window.closeModal = closeModal;
 window.loadJobs = loadJobs;
 window.regenerateAI = regenerateAI;
 window.useAITemplate = useAITemplate;
+window.hideTemplate = hideTemplate;
+window.resetTemplates = resetTemplates;
