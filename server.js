@@ -358,7 +358,7 @@ app.get('/api/template-preview/:templateId', async (req, res) => {
   }
 });
 
-// AI Template generation
+// AI Template generation - ONLY modifies colors/design, NOT text
 app.post('/api/ai-template', async (req, res) => {
   let browser = null;
 
@@ -379,10 +379,8 @@ app.post('/api/ai-template', async (req, res) => {
     }
 
     const selectedDotStyle = DOT_STYLES[dotStyle] || DOT_STYLES.default;
-    const dotsCSS = selectedDotStyle.length > 0 ?
-      selectedDotStyle.map((color, i) => `.dot-${i+1} { background: ${color}; }`).join('\n') : '';
 
-    // Call Claude API to generate HTML template
+    // Call Claude API to get ONLY color/design suggestions
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -392,41 +390,28 @@ app.post('/api/ai-template', async (req, res) => {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
+        max_tokens: 1024,
         messages: [{
           role: 'user',
-          content: `Create an HTML template for a LinkedIn job posting image. The template must be exactly 1080x1080 pixels.
+          content: `Based on this design request, suggest ONLY colors and layout style. DO NOT write any job text.
 
 USER'S DESIGN REQUEST:
 ${prompt}
 
-JOB DATA TO DISPLAY:
-- Job Title: ${job.title}
-- Salary: ${job.salary}
-- Location: ${job.location}
-- Schedule: ${job.schedule}
-- Job Code: ${job.jobCode || ''}
-- Responsibilities: ${(job.responsibilities || []).join(', ')}
-- Qualifications: ${(job.qualifications || []).join(', ')}
+Return ONLY a JSON object with these exact keys (no other text):
+{
+  "primaryColor": "#hex",
+  "secondaryColor": "#hex",
+  "backgroundColor": "#hex",
+  "accentColor": "#hex",
+  "headerBg": "#hex",
+  "textColor": "#hex",
+  "buttonColor": "#hex",
+  "buttonTextColor": "#hex",
+  "layout": "clean" | "bold" | "minimal" | "gradient"
+}
 
-BRAND GUIDELINES:
-- Primary color: #25a2ff (Sagan blue)
-- Secondary color: #093a3e (dark teal)
-- Accent color: #f5b801 (yellow/gold)
-- Background: #ede9e5 (cream) or white
-- Use clean, modern, professional design
-- Include "Apply Now" button
-- Include website: www.saganrecruitment.com/jobs/
-
-REQUIRED:
-- Output ONLY the complete HTML code, nothing else
-- Must include <!DOCTYPE html> and be self-contained
-- Size must be exactly 1080x1080px
-- Use embedded CSS (no external files)
-- Include 5 small decorative dots at bottom using these colors:
-${dotsCSS}
-
-Generate the complete HTML now:`
+IMPORTANT: Only return the JSON, nothing else.`
         }]
       })
     });
@@ -438,18 +423,251 @@ Generate the complete HTML now:`
     }
 
     const claudeData = await claudeResponse.json();
-    let html = claudeData.content[0].text;
+    let aiResponse = claudeData.content[0].text;
 
-    // Extract HTML if wrapped in code blocks
-    const htmlMatch = html.match(/```html\n?([\s\S]*?)```/) || html.match(/<!DOCTYPE html>[\s\S]*/i);
-    if (htmlMatch) {
-      html = htmlMatch[1] || htmlMatch[0];
+    // Parse AI color suggestions
+    let colors;
+    try {
+      // Extract JSON from response
+      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+      colors = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+    } catch (e) {
+      console.log('Failed to parse AI colors, using defaults');
+      colors = null;
     }
 
-    // Ensure it starts with DOCTYPE
-    if (!html.trim().toLowerCase().startsWith('<!doctype')) {
-      html = '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"></head><body>' + html + '</body></html>';
+    // Use AI colors or fallback to defaults
+    const design = {
+      primary: colors?.primaryColor || '#25a2ff',
+      secondary: colors?.secondaryColor || '#093a3e',
+      background: colors?.backgroundColor || '#ffffff',
+      accent: colors?.accentColor || '#f5b801',
+      headerBg: colors?.headerBg || '#25a2ff',
+      text: colors?.textColor || '#093a3e',
+      buttonColor: colors?.buttonColor || '#f5b801',
+      buttonTextColor: colors?.buttonTextColor || '#093a3e',
+      layout: colors?.layout || 'clean'
+    };
+
+    // Generate HTML with EXACT job text (no AI modification to text)
+    const responsibilities = (job.responsibilities || []).slice(0, 4).map(r =>
+      `<li>${r}</li>`
+    ).join('') || '<li>Details will be provided</li>';
+
+    const qualifications = (job.qualifications || []).slice(0, 4).map(q =>
+      `<li>${q}</li>`
+    ).join('') || '<li>Qualifications will be discussed</li>';
+
+    const dotsHTML = selectedDotStyle.length > 0 ? selectedDotStyle.map((color, i) =>
+      `<div class="dot" style="background: ${color};"></div>`
+    ).join('') : '';
+
+    // Create template with AI colors but FIXED job text
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @font-face {
+      font-family: 'PP Mori';
+      src: url(data:font/otf;base64,${FONTS['PPMori-SemiBold'] || ''}) format('opentype');
+      font-weight: 600;
     }
+    @font-face {
+      font-family: 'PP Neue Montreal';
+      src: url(data:font/otf;base64,${FONTS['PPNeueMontreal-Medium'] || ''}) format('opentype');
+      font-weight: 500;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'PP Neue Montreal', sans-serif;
+      background: ${design.background};
+    }
+    .poster {
+      width: 1080px;
+      height: 1080px;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: ${design.headerBg};
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .badge {
+      font-family: 'PP Mori', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .logo {
+      height: 45px;
+      filter: brightness(0) invert(1);
+    }
+    .content {
+      flex: 1;
+      padding: 50px 60px;
+    }
+    .job-title {
+      font-family: 'PP Mori', sans-serif;
+      font-size: 52px;
+      font-weight: 600;
+      color: ${design.secondary};
+      margin-bottom: 10px;
+      line-height: 1.1;
+    }
+    .job-code {
+      font-size: 20px;
+      color: ${design.text};
+      opacity: 0.7;
+      margin-bottom: 30px;
+    }
+    .info-row {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .info-label {
+      font-size: 12px;
+      color: ${design.text};
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .info-value {
+      font-family: 'PP Mori', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: ${design.primary};
+    }
+    .section {
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-family: 'PP Mori', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: ${design.text};
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+    }
+    .list li {
+      font-size: 16px;
+      color: ${design.text};
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .list li::before {
+      content: "•";
+      color: ${design.accent};
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+    .footer {
+      background: ${design.secondary};
+      padding: 30px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .apply-btn {
+      background: ${design.buttonColor};
+      color: ${design.buttonTextColor};
+      font-family: 'PP Mori', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 16px 40px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+    .footer-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .website {
+      color: white;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="header">
+      <div class="badge">We Are Hiring</div>
+      <img src="data:image/png;base64,${LOGOS.dark || ''}" class="logo" alt="Sagan">
+    </div>
+
+    <div class="content">
+      <h1 class="job-title">${job.title || 'Job Title'}</h1>
+      ${job.jobCode ? `<div class="job-code">(${job.jobCode})</div>` : ''}
+
+      <div class="info-row">
+        <div class="info-item">
+          <span class="info-label">Salary</span>
+          <span class="info-value">${job.salary || '$1,000 - $2,000'}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Location</span>
+          <span class="info-value">${job.location || 'Remote'}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Schedule</span>
+          <span class="info-value">${job.schedule || 'Full-time'}</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Key Responsibilities</div>
+        <ul class="list">${responsibilities}</ul>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Qualifications</div>
+        <ul class="list">${qualifications}</ul>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="apply-btn">Apply Now</div>
+      <div class="footer-right">
+        <div class="website">www.saganrecruitment.com/jobs/</div>
+        <div class="dots">${dotsHTML}</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
 
     // Render to image
     browser = await chromium.launch({ headless: true });
@@ -465,7 +683,8 @@ Generate the complete HTML now:`
     res.json({
       success: true,
       image: imageBuffer.toString('base64'),
-      html: html
+      html: html,
+      appliedColors: design
     });
 
   } catch (error) {

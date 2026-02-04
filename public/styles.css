@@ -105,6 +105,7 @@ body {
   gap: 24px;
   max-width: 1400px;
   margin: 0 auto;
+  align-items: start;
 }
 
 /* Panels */
@@ -145,14 +146,17 @@ body {
 
 /* Jobs List */
 .jobs-panel {
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 200px);
+  min-height: 400px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .jobs-list {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px;
 }
 
@@ -223,9 +227,10 @@ body {
 .job-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 12px;
   font-size: 14px;
   color: var(--text-muted);
+  overflow: hidden;
 }
 
 .job-salary {
@@ -238,6 +243,8 @@ body {
   height: fit-content;
   position: sticky;
   top: 102px;
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
 }
 
 .option-group {
@@ -345,10 +352,10 @@ select:focus {
 
 /* Generate Button */
 .btn-generate {
-  width: 100%;
+  display: block;
+  width: calc(100% - 48px);
   padding: 18px 24px;
   margin: 24px;
-  width: calc(100% - 48px);
   border: none;
   background: var(--primary);
   color: white;
@@ -421,8 +428,9 @@ select:focus {
 
 .templates-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
+  width: 100%;
 }
 
 .template-card {
@@ -614,6 +622,7 @@ select:focus {
 .ai-panel {
   grid-column: 1 / -1;
   margin-top: 24px;
+  width: 100%;
 }
 
 .ai-content {
@@ -708,17 +717,38 @@ select:focus {
 @media (max-width: 900px) {
   .page-content {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .options-panel {
     position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .jobs-panel {
+    max-height: 400px;
+    min-height: 300px;
   }
 
   .header {
     padding: 0 16px;
+    height: 60px;
   }
 
   .main {
     padding: 16px;
+  }
+
+  .ai-panel {
+    margin-top: 16px;
+  }
+
+  .panel-header {
+    padding: 16px 20px;
+  }
+
+  .option-group {
+    padding: 16px 20px;
   }
 }
