@@ -51,14 +51,11 @@ body {
 .logo {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
-.logo span {
-  font-size: 26px;
-  font-weight: 600;
-  color: #000;
-  letter-spacing: -0.5px;
+.logo img {
+  height: 40px;
+  width: auto;
 }
 
 .nav {
