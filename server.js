@@ -551,7 +551,6 @@ IMPORTANT: Only return the JSON, nothing else.`
     }
     .logo {
       height: 45px;
-      filter: brightness(0) invert(1);
     }
     .content {
       flex: 1;
@@ -1219,10 +1218,10 @@ app.post('/generate', async (req, res) => {
         : '<li>Qualifications will be discussed</li>';
       html = html.replace(/\{\{qualifications\}\}/g, qualHTML);
 
-      // Requirement pills (for diagonal template)
+      // Requirement pills (works with all templates: req-pill, req-item, skill, skill-tag)
       const reqPillsHTML = qualifications.length > 0
-        ? qualifications.slice(0, 4).map(q => `<div class="req-pill">${q}</div>`).join('')
-        : '<div class="req-pill">Experience required</div>';
+        ? qualifications.slice(0, 4).map(q => `<div class="req-pill req-item skill skill-tag">${q}</div>`).join('')
+        : '<div class="req-pill req-item skill skill-tag">Experience required</div>';
       html = html.replace(/\{\{requirementPills\}\}/g, reqPillsHTML);
 
       // Key points (for minimal-card template)
@@ -1354,7 +1353,17 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     templates: TEMPLATES,
-    dotStyles: DOT_STYLE_NAMES
+    dotStyles: DOT_STYLE_NAMES,
+    logos: {
+      dark: LOGOS.dark ? `${LOGOS.dark.length} chars` : 'MISSING',
+      light: LOGOS.light ? `${LOGOS.light.length} chars` : 'MISSING',
+      blue: LOGOS.blue ? `${LOGOS.blue.length} chars` : 'MISSING'
+    },
+    fonts: {
+      'PPMori-SemiBold': FONTS['PPMori-SemiBold'] ? 'loaded' : 'MISSING',
+      'PPMori-Regular': FONTS['PPMori-Regular'] ? 'loaded' : 'MISSING',
+      'PPNeueMontreal-Medium': FONTS['PPNeueMontreal-Medium'] ? 'loaded' : 'MISSING'
+    }
   });
 });
 
