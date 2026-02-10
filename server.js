@@ -1137,11 +1137,11 @@ app.post('/generate', async (req, res) => {
     html = html.replace(/\{\{background\}\}/g, theme.background);
     html = html.replace(/\{\{accent\}\}/g, theme.accent);
 
-    // Replace logos based on selected style
+    // Replace ALL logo placeholders with selected logo
     const selectedLogo = LOGOS[logoStyle] || LOGOS.dark || '';
     html = html.replace(/\{\{logoBase64\}\}/g, selectedLogo);
-    html = html.replace(/\{\{logoLightBase64\}\}/g, LOGOS.light || LOGOS.dark || '');
-    html = html.replace(/\{\{logoBlueBase64\}\}/g, LOGOS.blue || LOGOS.dark || '');
+    html = html.replace(/\{\{logoLightBase64\}\}/g, selectedLogo);
+    html = html.replace(/\{\{logoBlueBase64\}\}/g, selectedLogo);
 
     // Replace fonts
     html = html.replace(/\{\{fontPPMoriSemiBold\}\}/g, FONTS['PPMori-SemiBold'] || '');

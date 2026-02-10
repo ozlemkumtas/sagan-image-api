@@ -246,6 +246,21 @@
       align-items: center;
     }
 
+    .footer-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
     .apply-btn {
       background: white;
       color: {{secondary}};
@@ -324,7 +339,16 @@
 
     <div class="footer">
       <div class="apply-btn">Apply Now</div>
-      <div class="website">www.saganrecruitment.com/career</div>
+      <div class="footer-right">
+        <div class="website">www.saganrecruitment.com/career</div>
+        <div class="dots">
+          <span class="dot" style="background:{{dot1Color}}"></span>
+          <span class="dot" style="background:{{dot2Color}}"></span>
+          <span class="dot" style="background:{{dot3Color}}"></span>
+          <span class="dot" style="background:{{dot4Color}}"></span>
+          <span class="dot" style="background:{{dot5Color}}"></span>
+        </div>
+      </div>
     </div>
   </div>
 </body>
