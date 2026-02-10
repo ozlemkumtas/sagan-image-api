@@ -153,6 +153,25 @@ body {
   overflow: hidden;
 }
 
+.search-bar {
+  padding: 12px 16px 0;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--bg);
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+}
+
 .jobs-list {
   flex: 1;
   overflow-y: auto;

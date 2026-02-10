@@ -60,10 +60,15 @@ function parseJobDescription(description) {
 
   // Extract Salary - various formats
   const salaryPatterns = [
-    /Salary\s*(?:Range)?[:\s]*\$?([\d,]+)\s*[-–]\s*\$?([\d,]+)\s*(?:USD)?/i,
-    /Salary\s*(?:Range)?[:\s]*([\d,]+)\s*[-–]\s*([\d,]+)\s*USD/i,
-    /\$?([\d,]+)\s*[-–]\s*\$?([\d,]+)\s*(?:USD)?\s*\/\s*month/i,
-    /Earn up to \$?([\d,]+)/i
+    /Salary\s*(?:Range)?[:\s]*\$?([\d,]+)\s*[-–—]\s*\$?([\d,]+)\s*(?:USD)?(?:\s*\/\s*(?:month|mo))?/i,
+    /Salary\s*(?:Range)?[:\s]*([\d,]+)\s*[-–—]\s*([\d,]+)\s*USD/i,
+    /\$?([\d,]+)\s*[-–—]\s*\$?([\d,]+)\s*(?:USD)?\s*\/\s*(?:month|mo)/i,
+    /Compensation[:\s]*\$?([\d,]+)\s*[-–—]\s*\$?([\d,]+)/i,
+    /Pay[:\s]*\$?([\d,]+)\s*[-–—]\s*\$?([\d,]+)/i,
+    /\$\s*([\d,]+)\s*[-–—]\s*\$\s*([\d,]+)/i,
+    /([\d,]+)\s*[-–—]\s*([\d,]+)\s*USD/i,
+    /Earn up to \$?([\d,]+)/i,
+    /up to \$?([\d,]+)/i
   ];
 
   for (const pattern of salaryPatterns) {
@@ -219,7 +224,8 @@ app.get('/api/airtable/jobs', async (req, res) => {
       return res.json({ jobs: [], message: 'Airtable not configured' });
     }
 
-    const airtableUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
+    // Fetch all records, sorted by newest first (using Airtable's internal created time)
+    const airtableUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?pageSize=50`;
     console.log('Fetching Airtable:', airtableUrl);
 
     const response = await fetch(airtableUrl, {
@@ -237,7 +243,10 @@ app.get('/api/airtable/jobs', async (req, res) => {
 
     const data = await response.json();
 
-    const jobs = data.records.map(record => {
+    // Reverse to show newest first (Airtable returns oldest first by default)
+    const records = data.records.reverse();
+
+    const jobs = records.map(record => {
       const description = record.fields['Final Job Description'] || record.fields['Description'] || record.fields['Job Description'] || '';
       const parsed = parseJobDescription(description);
 

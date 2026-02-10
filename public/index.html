@@ -31,6 +31,10 @@
               <button class="btn-refresh" onclick="loadJobs()">↻ Refresh</button>
             </div>
 
+            <div class="search-bar">
+              <input type="text" id="jobSearch" placeholder="Search jobs..." oninput="filterJobs()">
+            </div>
+
             <div class="jobs-list" id="jobsList">
               <!-- Jobs will be loaded here -->
             </div>

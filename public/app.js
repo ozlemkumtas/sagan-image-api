@@ -161,23 +161,38 @@ function getDemoJobs() {
   ];
 }
 
+// Filter Jobs by search
+function filterJobs() {
+  const query = document.getElementById('jobSearch').value.toLowerCase().trim();
+  renderJobs(query);
+}
+
 // Render Jobs
-function renderJobs() {
+function renderJobs(searchQuery = '') {
   const container = document.getElementById('jobsList');
 
-  if (state.jobs.length === 0) {
+  let filteredJobs = state.jobs;
+  if (searchQuery) {
+    filteredJobs = state.jobs.filter(job =>
+      job.title.toLowerCase().includes(searchQuery) ||
+      job.salary.toLowerCase().includes(searchQuery) ||
+      job.location.toLowerCase().includes(searchQuery)
+    );
+  }
+
+  if (filteredJobs.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        <p>No jobs found. Add jobs in Airtable.</p>
+        <p>${searchQuery ? 'No matching jobs found.' : 'No jobs found. Add jobs in Airtable.'}</p>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = state.jobs.map(job => `
+  container.innerHTML = filteredJobs.map(job => `
     <div class="job-card ${state.selectedJobs.has(job.id) ? 'selected' : ''}"
          data-id="${job.id}"
          onclick="toggleJob('${job.id}')">
@@ -185,7 +200,7 @@ function renderJobs() {
       <div class="job-info">
         <div class="job-title">${job.title}</div>
         <div class="job-meta">
-          <span class="job-salary">${job.salary}</span>
+          <span class="job-salary">${job.salary || 'Salary TBD'}</span>
           <span>${job.location}</span>
           <span>${job.schedule}</span>
         </div>
@@ -552,3 +567,4 @@ window.regenerateAI = regenerateAI;
 window.useAITemplate = useAITemplate;
 window.hideTemplate = hideTemplate;
 window.resetTemplates = resetTemplates;
+window.filterJobs = filterJobs;
