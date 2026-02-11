@@ -8,8 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from public folder
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from public folder (no cache for JS/CSS to avoid stale versions)
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // Available templates
 const TEMPLATES = ['catalog-1', 'catalog-2', 'catalog-3', 'catalog-multi', 'diagonal', 'spotlight', 'waves', 'modern-clean', 'split-screen', 'search-style', 'multi-job'];
@@ -1119,7 +1125,11 @@ app.post('/generate', async (req, res) => {
     // Select dot style
     const selectedDotStyle = DOT_STYLES[dotStyle] || DOT_STYLES.default;
 
-    console.log(`Using template: ${selectedTemplate}, dotStyle: ${dotStyle}`);
+    console.log(`=== GENERATE REQUEST ===`);
+    console.log(`Template: ${selectedTemplate}`);
+    console.log(`Logo style: ${logoStyle} → ${LOGOS[logoStyle] ? LOGOS[logoStyle].length + ' chars' : 'MISSING'}`);
+    console.log(`Dot style: ${dotStyle} → ${JSON.stringify(selectedDotStyle)}`);
+    console.log(`Job: ${jobTitle}, Salary: ${salary}`);
 
     // Read template
     const templatePath = path.join(__dirname, 'templates', `${selectedTemplate}.html`);
@@ -1346,6 +1356,83 @@ app.get('/api/logo/:type', (req, res) => {
   res.set('Content-Type', 'image/png');
   res.set('Cache-Control', 'public, max-age=86400');
   res.send(buffer);
+});
+
+// Debug test - generates a test image with specific params to verify
+app.get('/test-generate', async (req, res) => {
+  let browser = null;
+  try {
+    const logoStyle = req.query.logo || 'dark';
+    const dotStyle = req.query.dots || 'default';
+    const template = req.query.template || 'modern-clean';
+
+    const selectedLogo = LOGOS[logoStyle] || LOGOS.dark || '';
+    const selectedDotStyle = DOT_STYLES[dotStyle] || DOT_STYLES.default;
+
+    console.log(`=== TEST GENERATE ===`);
+    console.log(`Logo: ${logoStyle} → ${selectedLogo.length} chars`);
+    console.log(`Dots: ${dotStyle} → ${JSON.stringify(selectedDotStyle)}`);
+
+    let html = fs.readFileSync(path.join(__dirname, 'templates', `${template}.html`), 'utf8');
+
+    // Replace everything
+    html = html.replace(/\{\{primary\}\}/g, THEME.primary);
+    html = html.replace(/\{\{secondary\}\}/g, THEME.secondary);
+    html = html.replace(/\{\{background\}\}/g, THEME.background);
+    html = html.replace(/\{\{accent\}\}/g, THEME.accent);
+    html = html.replace(/\{\{logoBase64\}\}/g, selectedLogo);
+    html = html.replace(/\{\{logoLightBase64\}\}/g, selectedLogo);
+    html = html.replace(/\{\{logoBlueBase64\}\}/g, selectedLogo);
+    html = html.replace(/\{\{fontPPMoriSemiBold\}\}/g, FONTS['PPMori-SemiBold'] || '');
+    html = html.replace(/\{\{fontPPMoriRegular\}\}/g, FONTS['PPMori-Regular'] || '');
+    html = html.replace(/\{\{fontPPMoriBook\}\}/g, FONTS['PPMori-Book'] || '');
+    html = html.replace(/\{\{fontPPNeueMontreal\}\}/g, FONTS['PPNeueMontreal-Medium'] || '');
+
+    if (selectedDotStyle.length >= 5) {
+      html = html.replace(/\{\{dot1Color\}\}/g, selectedDotStyle[0]);
+      html = html.replace(/\{\{dot2Color\}\}/g, selectedDotStyle[1]);
+      html = html.replace(/\{\{dot3Color\}\}/g, selectedDotStyle[2]);
+      html = html.replace(/\{\{dot4Color\}\}/g, selectedDotStyle[3]);
+      html = html.replace(/\{\{dot5Color\}\}/g, selectedDotStyle[4]);
+    } else {
+      html = html.replace(/\{\{dot1Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot2Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot3Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot4Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot5Color\}\}/g, 'transparent');
+    }
+
+    html = html.replace(/\{\{jobTitle\}\}/g, 'Test Job Title');
+    html = html.replace(/\{\{salary\}\}/g, '$2,000 - $3,000');
+    html = html.replace(/\{\{location\}\}/g, 'Remote');
+    html = html.replace(/\{\{schedule\}\}/g, 'Full-time');
+    html = html.replace(/\{\{jobCode\}\}/g, 'TEST123');
+    html = html.replace(/\{\{responsibilities\}\}/g, '<li>Test responsibility</li>');
+    html = html.replace(/\{\{qualifications\}\}/g, '<li>Test qualification</li>');
+    html = html.replace(/\{\{requirementPills\}\}/g, '<div class="req-pill req-item skill skill-tag">Test Skill</div>');
+    html = html.replace(/\{\{keyPoints\}\}/g, '');
+    html = html.replace(/\{\{personPhotoUrl\}\}/g, '');
+    html = html.replace(/\{\{responsibilitiesList\}\}/g, '<li>Test</li>');
+    html = html.replace(/\{\{qualificationsList\}\}/g, '<li>Test</li>');
+    html = html.replace(/\{\{jobItems\}\}/g, '');
+
+    browser = await chromium.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setViewportSize({ width: 1080, height: 1080 });
+    await page.setContent(html, { waitUntil: 'load' });
+    await page.waitForTimeout(1000);
+
+    const imageBuffer = await page.screenshot({ type: 'png' });
+    await browser.close();
+    browser = null;
+
+    res.set('Content-Type', 'image/png');
+    res.send(imageBuffer);
+  } catch (error) {
+    console.error('Test generate error:', error);
+    if (browser) await browser.close();
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Health check
