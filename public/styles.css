@@ -671,10 +671,44 @@ select:focus {
 }
 
 .template-info {
-  padding: 16px;
+  padding: 12px 16px;
   text-align: center;
   font-weight: 600;
   color: var(--secondary);
+}
+
+.template-meta {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+
+.template-custom-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--accent);
+  color: var(--secondary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+.templates-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 4px;
 }
 
 /* Modal */
@@ -747,10 +781,15 @@ select:focus {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.modal-body .image-download {
+.modal-body .image-actions {
   position: absolute;
   bottom: 12px;
   right: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.modal-body .image-download {
   padding: 8px 16px;
   background: var(--surface);
   border: none;
@@ -759,6 +798,23 @@ select:focus {
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.modal-body .image-save {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--secondary);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+.modal-body .image-save:hover {
+  background: #e0a800;
 }
 
 .modal-footer {

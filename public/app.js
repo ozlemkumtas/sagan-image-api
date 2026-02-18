@@ -373,14 +373,48 @@ function showModal() {
   const modal = document.getElementById('resultModal');
   const body = document.getElementById('modalBody');
 
+  const selectedJobData = state.jobs.filter(job => state.selectedJobs.has(job.id));
+  const jobName = selectedJobData.length === 1 ? selectedJobData[0].title : `${selectedJobData.length} Jobs`;
+
   body.innerHTML = state.generatedImages.map((img, i) => `
     <div class="image-item">
       <img src="${img}" alt="Generated image ${i + 1}">
-      <button class="image-download" onclick="downloadImage(${i})">Download</button>
+      <div class="image-actions">
+        <button class="image-download" onclick="downloadImage(${i})">Download</button>
+        <button class="image-save" onclick="saveToTemplates(${i}, '${jobName.replace(/'/g, "\\'")}')">+ Save</button>
+      </div>
     </div>
   `).join('');
 
   modal.classList.add('open');
+}
+
+// Save generated image to custom templates
+function saveToTemplates(index, jobName) {
+  const image = state.generatedImages[index];
+  if (!image) return;
+
+  const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+
+  const newTemplate = {
+    id: 'custom_' + Date.now(),
+    name: jobName || 'Custom Template',
+    imageBase64: image,
+    savedAt: new Date().toLocaleDateString('tr-TR'),
+    template: state.template,
+    dotStyle: state.dotStyle,
+    logoStyle: state.logoStyle
+  };
+
+  customTemplates.unshift(newTemplate); // newest first
+  localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
+
+  showToast('Saved to Templates!', 'success');
+
+  // If on templates page, refresh it
+  if (document.getElementById('page-templates').classList.contains('active')) {
+    loadTemplates();
+  }
 }
 
 function closeModal() {
@@ -404,8 +438,8 @@ function downloadAll() {
 
 // Load Templates
 function loadTemplates() {
-  // Get hidden templates from localStorage
   const hiddenTemplates = JSON.parse(localStorage.getItem('hiddenTemplates') || '[]');
+  const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
 
   const allTemplates = [
     { id: 'catalog-1', name: 'Catalog 1' },
@@ -418,13 +452,33 @@ function loadTemplates() {
     { id: 'split-screen', name: 'Split Screen' }
   ];
 
-  // Filter out hidden templates
   const templates = allTemplates.filter(t => !hiddenTemplates.includes(t.id));
-
   const grid = document.getElementById('templatesGrid');
 
+  let html = '';
+
+  // Saved custom templates section
+  if (customTemplates.length > 0) {
+    html += `<div class="templates-section-title" style="grid-column:1/-1;">Saved Templates</div>`;
+    html += customTemplates.map(t => `
+      <div class="template-card">
+        <div class="template-custom-badge">Saved</div>
+        <button class="template-delete" onclick="event.stopPropagation(); deleteCustomTemplate('${t.id}')" title="Delete">×</button>
+        <div class="template-preview" onclick="previewCustomTemplate('${t.id}')">
+          <img src="${t.imageBase64}" alt="${t.name}">
+        </div>
+        <div class="template-info" onclick="previewCustomTemplate('${t.id}')">
+          <div>${t.name}</div>
+          <div class="template-meta">${t.savedAt} · ${t.template} · ${t.dotStyle}</div>
+        </div>
+      </div>
+    `).join('');
+    html += `<div class="templates-section-title" style="grid-column:1/-1; margin-top:8px;">Default Templates</div>`;
+  }
+
+  // Default templates
   if (templates.length === 0) {
-    grid.innerHTML = `
+    html += `
       <div class="empty-state" style="grid-column: 1/-1;">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
@@ -433,20 +487,40 @@ function loadTemplates() {
         <button class="btn-secondary" onclick="resetTemplates()" style="margin-top:12px;">Restore All</button>
       </div>
     `;
-    return;
+  } else {
+    html += templates.map(t => `
+      <div class="template-card">
+        <button class="template-delete" onclick="event.stopPropagation(); hideTemplate('${t.id}')" title="Hide template">×</button>
+        <div class="template-preview" onclick="selectTemplate('${t.id}')">
+          <img src="${API_URL}/api/template-preview/${t.id}"
+               alt="${t.name}"
+               onerror="this.style.display='none'">
+        </div>
+        <div class="template-info" onclick="selectTemplate('${t.id}')">${t.name}</div>
+      </div>
+    `).join('');
   }
 
-  grid.innerHTML = templates.map(t => `
-    <div class="template-card">
-      <button class="template-delete" onclick="event.stopPropagation(); hideTemplate('${t.id}')" title="Hide template">×</button>
-      <div class="template-preview" onclick="selectTemplate('${t.id}')">
-        <img src="${API_URL}/api/template-preview/${t.id}"
-             alt="${t.name}"
-             onerror="this.style.display='none'">
-      </div>
-      <div class="template-info" onclick="selectTemplate('${t.id}')">${t.name}</div>
-    </div>
-  `).join('');
+  grid.innerHTML = html;
+}
+
+// Delete a saved custom template
+function deleteCustomTemplate(id) {
+  let customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+  customTemplates = customTemplates.filter(t => t.id !== id);
+  localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
+  loadTemplates();
+  showToast('Template deleted');
+}
+
+// Preview a saved custom template (opens modal with download option)
+function previewCustomTemplate(id) {
+  const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+  const t = customTemplates.find(t => t.id === id);
+  if (!t) return;
+
+  state.generatedImages = [t.imageBase64];
+  showModal();
 }
 
 // Hide template
@@ -647,4 +721,7 @@ window.hideTemplate = hideTemplate;
 window.resetTemplates = resetTemplates;
 window.filterJobs = filterJobs;
 window.clearAllSelections = clearAllSelections;
+window.saveToTemplates = saveToTemplates;
+window.deleteCustomTemplate = deleteCustomTemplate;
+window.previewCustomTemplate = previewCustomTemplate;
 window.postToLinkedIn = postToLinkedIn;
