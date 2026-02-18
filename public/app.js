@@ -34,6 +34,11 @@ function initNavigation() {
       btn.classList.add('active');
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(`page-${page}`).classList.add('active');
+
+      // Reload templates when switching to templates tab (picks up newly saved)
+      if (page === 'templates') {
+        loadTemplates();
+      }
     });
   });
 }
