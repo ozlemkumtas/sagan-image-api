@@ -1238,6 +1238,50 @@ select:focus {
   text-align: center;
 }
 
+/* Advanced section */
+.advanced-section {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.advanced-section summary {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.advanced-section summary::before {
+  content: '▸';
+  font-size: 11px;
+  transition: transform 0.2s;
+}
+
+.advanced-section[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.advanced-section summary:hover {
+  color: var(--primary);
+  background: var(--bg);
+}
+
+.advanced-content {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--bg);
+}
+
 /* AI Template Page */
 .ai-template-page {
   display: grid;
