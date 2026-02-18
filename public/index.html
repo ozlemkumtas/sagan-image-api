@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sagan Image Generator</title>
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <div class="app">
@@ -269,9 +269,9 @@
               </div>
               <div class="ai-template-form">
 
-                <!-- 1. RENK PALETİ -->
+                <!-- 1. COLOR PALETTE -->
                 <div class="selector-group">
-                  <div class="selector-label">Renk Paleti</div>
+                  <div class="selector-label">Color Palette</div>
                   <div class="palette-grid">
                     <button class="palette-card active" data-palette="classic">
                       <div class="palette-swatches"><span style="background:#ede9e5"></span><span style="background:#093a3e"></span><span style="background:#25a2ff"></span><span style="background:#f5b801"></span></div>
@@ -308,38 +308,38 @@
                   </div>
                 </div>
 
-                <!-- 2. STİL -->
+                <!-- 2. STYLE -->
                 <div class="selector-group">
-                  <div class="selector-label">Stil</div>
+                  <div class="selector-label">Style</div>
                   <div class="selector-btns">
                     <button class="sel-btn active" data-group="style" data-value="minimal">Minimal</button>
                     <button class="sel-btn" data-group="style" data-value="bold">Bold</button>
-                    <button class="sel-btn" data-group="style" data-value="corporate">Kurumsal</button>
+                    <button class="sel-btn" data-group="style" data-value="corporate">Corporate</button>
                     <button class="sel-btn" data-group="style" data-value="modern">Modern</button>
                   </div>
                 </div>
 
-                <!-- 3. EKSTRA NOT (küçük) -->
+                <!-- 3. EXTRA NOTES (optional) -->
                 <div class="selector-group">
-                  <div class="selector-label">Ekstra Not <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:0.6;">(isteğe bağlı)</span></div>
+                  <div class="selector-label">Extra Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:0.6;">(optional)</span></div>
                   <textarea id="aiTemplatePrompt" rows="2"
-                    placeholder="Örn: köşelerde geometrik şekiller olsun, maaş çok büyük olsun..."></textarea>
+                    placeholder="E.g.: geometric shapes in corners, make salary very large..."></textarea>
                 </div>
 
-                <!-- 4. GELİŞMİŞ (gizli) -->
+                <!-- 4. ADVANCED (hidden) -->
                 <details class="advanced-section">
-                  <summary>Gelişmiş Ayarlar</summary>
+                  <summary>Advanced Settings</summary>
                   <div class="advanced-content">
                     <div class="selector-group">
-                      <div class="selector-label">Ne Öne Çıksın?</div>
+                      <div class="selector-label">Emphasis</div>
                       <div class="selector-btns">
-                        <button class="sel-btn active" data-group="emphasis" data-value="balanced">Dengeli</button>
-                        <button class="sel-btn" data-group="emphasis" data-value="salary">💰 Maaş</button>
-                        <button class="sel-btn" data-group="emphasis" data-value="title">📌 Pozisyon</button>
+                        <button class="sel-btn active" data-group="emphasis" data-value="balanced">Balanced</button>
+                        <button class="sel-btn" data-group="emphasis" data-value="salary">💰 Salary</button>
+                        <button class="sel-btn" data-group="emphasis" data-value="title">📌 Job Title</button>
                       </div>
                     </div>
                     <div class="selector-group">
-                      <div class="selector-label">Logo Stili</div>
+                      <div class="selector-label">Logo Style</div>
                       <div class="logo-options">
                         <button class="logo-btn active" data-logo="dark"><img src="/api/logo/dark" alt="Dark" onerror="this.parentElement.innerHTML='Dark'"></button>
                         <button class="logo-btn dark-bg" data-logo="light"><img src="/api/logo/light" alt="Light" onerror="this.parentElement.innerHTML='Light'"></button>
@@ -347,7 +347,7 @@
                       </div>
                     </div>
                     <div class="selector-group">
-                      <div class="selector-label">Nokta Renkleri</div>
+                      <div class="selector-label">Dot Colors</div>
                       <div class="dot-options">
                         <button class="dot-btn active" data-style="default"><span style="background:#f5b801"></span><span style="background:#73e491"></span><span style="background:#25a2ff"></span><span style="background:#ff7455"></span><span style="background:#9e988f"></span></button>
                         <button class="dot-btn" data-style="vibrant"><span style="background:#796aff"></span><span style="background:#25a2ff"></span><span style="background:#73e491"></span><span style="background:#ff7455"></span><span style="background:#f5b801"></span></button>
@@ -357,17 +357,17 @@
                       </div>
                     </div>
                     <div class="selector-group">
-                      <div class="selector-label">Template Adı</div>
-                      <input type="text" id="aiTemplateName" placeholder="Otomatik isim verilir" maxlength="40">
+                      <div class="selector-label">Template Name</div>
+                      <input type="text" id="aiTemplateName" placeholder="Auto-generated if empty" maxlength="40">
                     </div>
                   </div>
                 </details>
 
                 <button class="btn-generate" id="aiTemplateGenBtn" onclick="generateAITemplate()">
-                  ✨ AI ile Template Üret
+                  ✨ Generate with AI
                 </button>
                 <div class="ai-template-note">
-                  Üretilen template'ler Template Gallery'ye kaydedilir
+                  Generated templates are saved to the Template Gallery
                 </div>
               </div>
             </div>
@@ -379,7 +379,7 @@
               <div class="panel-header">
                 <h2>Preview</h2>
                 <div id="aiTemplatePreviewActions" style="display:none;">
-                  <button class="btn-secondary" style="padding:8px 16px;font-size:14px;" onclick="downloadAITemplatePreview()">İndir</button>
+                  <button class="btn-secondary" style="padding:8px 16px;font-size:14px;" onclick="downloadAITemplatePreview()">Download</button>
                 </div>
               </div>
               <div class="ai-template-preview-wrap" id="aiTemplatePreviewWrap">
@@ -387,17 +387,17 @@
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
-                  <p style="font-size:15px;">Seçimlerini yap ve üret butonuna bas</p>
+                  <p style="font-size:15px;">Make your selections and press generate</p>
                 </div>
               </div>
             </div>
 
             <div class="panel ai-template-history-panel">
               <div class="panel-header">
-                <h2>Son Üretilenler</h2>
+                <h2>Recently Generated</h2>
               </div>
               <div class="ai-template-history" id="aiTemplateHistory">
-                <div style="padding:24px;color:#999;font-size:14px;text-align:center;">Henüz template üretilmedi</div>
+                <div style="padding:24px;color:#999;font-size:14px;text-align:center;">No templates generated yet</div>
               </div>
             </div>
           </div>
@@ -426,6 +426,6 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
