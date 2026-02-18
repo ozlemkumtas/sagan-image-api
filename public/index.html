@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sagan Image Generator</title>
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <div class="app">
@@ -335,6 +335,15 @@
                     <button class="sel-btn bg-btn" data-group="background" data-value="blue">
                       <span class="bg-dot" style="background:#25a2ff;"></span>Blue
                     </button>
+                    <button class="sel-btn bg-btn" data-group="background" data-value="custom">
+                      <span class="bg-dot" style="background: conic-gradient(#f5b801, #73e491, #25a2ff, #ff7455, #796aff, #f5b801);"></span>Custom
+                    </button>
+                  </div>
+                  <div class="custom-bg-row" id="customBgRow">
+                    <input type="color" id="customBgPicker" value="#f0e6d3"
+                      oninput="syncCustomBg(this.value, 'picker')">
+                    <input type="text" id="customBgText" placeholder="#hex or color name e.g. navy, coral..."
+                      oninput="syncCustomBg(this.value, 'text')">
                   </div>
                 </div>
 
@@ -457,6 +466,6 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <script src="app.js?v=14"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>

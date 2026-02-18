@@ -839,9 +839,20 @@ const DECORATION_PROMPTS = {
 function buildAIPrompt() {
   const extraNote = document.getElementById('aiTemplatePrompt').value.trim();
   const decorationPrompt = DECORATION_PROMPTS[aiSelections.decoration];
+
+  let bgPrompt;
+  if (aiSelections.background === 'custom') {
+    const textVal = document.getElementById('customBgText').value.trim();
+    const pickerVal = document.getElementById('customBgPicker').value;
+    const customColor = textVal || pickerVal || '#ffffff';
+    bgPrompt = `Background color: ${customColor} (custom color chosen by user). Choose text colors with strong contrast against this background.`;
+  } else {
+    bgPrompt = BACKGROUND_PROMPTS[aiSelections.background];
+  }
+
   const parts = [
     `Color palette: ${PALETTE_PROMPTS[aiSelections.palette]}`,
-    BACKGROUND_PROMPTS[aiSelections.background],
+    bgPrompt,
     STYLE_PROMPTS[aiSelections.style],
     EMPHASIS_PROMPTS[aiSelections.emphasis]
   ];
@@ -850,15 +861,29 @@ function buildAIPrompt() {
   return parts.join(' ');
 }
 
+function syncCustomBg(value, source) {
+  if (source === 'picker') {
+    document.getElementById('customBgText').value = value;
+  } else if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+    document.getElementById('customBgPicker').value = value;
+  }
+}
+
 // Init selector buttons
 document.addEventListener('DOMContentLoaded', () => {
-  // Selector buttons (color tone, style, emphasis)
+  // Selector buttons (color tone, style, emphasis, background, decoration)
   document.querySelectorAll('.sel-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const group = btn.dataset.group;
       document.querySelectorAll(`.sel-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       aiSelections[group] = btn.dataset.value;
+
+      // Show/hide custom background input
+      if (group === 'background') {
+        const customRow = document.getElementById('customBgRow');
+        if (customRow) customRow.style.display = btn.dataset.value === 'custom' ? 'flex' : 'none';
+      }
     });
   });
 
@@ -1067,4 +1092,5 @@ window.saveAIToTemplates = saveAIToTemplates;
 window.generateAITemplate = generateAITemplate;
 window.downloadAITemplatePreview = downloadAITemplatePreview;
 window.fillExample = fillExample;
+window.syncCustomBg = syncCustomBg;
 window.useHistoryTemplate = useHistoryTemplate;

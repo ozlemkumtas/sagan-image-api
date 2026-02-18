@@ -1202,6 +1202,46 @@ select:focus {
   display: inline-block;
 }
 
+.custom-bg-row {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.custom-bg-row input[type="color"] {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 2px;
+  background: white;
+  flex-shrink: 0;
+}
+
+.custom-bg-row input[type="text"] {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.custom-bg-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+}
+
+.custom-bg-row input[type="text"]::placeholder {
+  color: #b0b8c4;
+}
+
 /* Palette Cards */
 .palette-grid {
   display: grid;
