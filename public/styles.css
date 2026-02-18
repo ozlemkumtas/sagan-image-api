@@ -1265,6 +1265,29 @@ select:focus {
   color: #b0b8c4;
 }
 
+/* Template Name input */
+#aiTemplateName {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+#aiTemplateName:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+}
+
+#aiTemplateName::placeholder {
+  color: #b0b8c4;
+}
+
 /* Advanced section */
 .advanced-section {
   border: 1px solid var(--border);
