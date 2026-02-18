@@ -7,6 +7,7 @@ let state = {
   jobs: [],
   selectedJobs: new Set(),
   template: 'catalog-1',
+  carouselCoverTemplate: 'cover-default',
   carouselDetailTemplate: 'modern-clean',
   dotStyle: 'default',
   logoStyle: 'dark',
@@ -89,6 +90,9 @@ function initLogoStyle() {
 function initTemplateSelect() {
   document.getElementById('templateSelect').addEventListener('change', (e) => {
     state.template = e.target.value;
+  });
+  document.getElementById('carouselCoverSelect').addEventListener('change', (e) => {
+    state.carouselCoverTemplate = e.target.value;
   });
   document.getElementById('carouselDetailSelect').addEventListener('change', (e) => {
     state.carouselDetailTemplate = e.target.value;
@@ -323,6 +327,7 @@ async function generateImages() {
           jobs: selectedJobData,
           dotStyle: state.dotStyle,
           logoStyle: state.logoStyle,
+          coverTemplate: state.carouselCoverTemplate,
           detailTemplate: state.carouselDetailTemplate
         })
       });
@@ -416,7 +421,7 @@ function saveToTemplates(index, jobName) {
     id: 'custom_' + Date.now(),
     name: jobName || 'Custom Template',
     imageBase64: image,
-    savedAt: new Date().toLocaleDateString('tr-TR'),
+    savedAt: new Date().toLocaleDateString('en-US'),
     template: state.template,
     dotStyle: state.dotStyle,
     logoStyle: state.logoStyle
@@ -610,7 +615,7 @@ async function sendAIMessage() {
 
   const selectedJobData = state.jobs.filter(job => state.selectedJobs.has(job.id));
   if (selectedJobData.length === 0) {
-    showToast('Önce bir iş ilanı seç', 'error');
+    showToast('Please select a job first', 'error');
     return;
   }
 
@@ -643,7 +648,7 @@ async function sendAIMessage() {
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.message || err.error || 'AI hatası');
+      throw new Error(err.message || err.error || 'AI error');
     }
 
     const data = await response.json();
@@ -669,7 +674,7 @@ async function sendAIMessage() {
   } catch (error) {
     const typing = document.querySelector('.ai-typing');
     if (typing) typing.remove();
-    addChatBubble('Bir hata oluştu: ' + error.message, 'ai');
+    addChatBubble('An error occurred: ' + error.message, 'ai');
     console.error('AI chat error:', error);
   } finally {
     document.getElementById('aiSendBtn').disabled = state.selectedJobs.size === 0;
@@ -692,7 +697,7 @@ function resetAIChat() {
 
   document.getElementById('aiChatMessages').innerHTML = `
     <div class="ai-chat-bubble ai-bubble">
-      Merhaba! Bir iş ilanı seç ve tasarım hakkında ne istediğini söyle. Örneğin: <em>"Koyu mavi arka plan, sarı maaş rengi"</em>
+      Hello! Select a job and tell me what you want for the design. For example: <em>"Dark blue background, yellow salary"</em> or <em>"More minimal look"</em>
     </div>
   `;
 
@@ -703,7 +708,7 @@ function resetAIChat() {
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
-      <p>Bir ilan seç ve tasarımını anlat</p>
+      <p>Select a job and describe your design</p>
     </div>
   `;
   document.getElementById('aiActions').style.display = 'none';
@@ -715,7 +720,7 @@ function downloadAIImage() {
   link.href = aiCurrentImage;
   link.download = 'sagan-ai-design.png';
   link.click();
-  showToast('İndirildi!', 'success');
+  showToast('Downloaded!', 'success');
 }
 
 function saveAIToTemplates() {
@@ -728,13 +733,13 @@ function saveAIToTemplates() {
     id: 'custom_' + Date.now(),
     name: jobName,
     imageBase64: aiCurrentImage,
-    savedAt: new Date().toLocaleDateString('tr-TR'),
+    savedAt: new Date().toLocaleDateString('en-US'),
     template: 'ai-chat',
     dotStyle: state.dotStyle,
     logoStyle: state.logoStyle
   });
   localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
-  showToast('Templates\'e eklendi!', 'success');
+  showToast('Added to Templates!', 'success');
 }
 
 // Post to LinkedIn via Make webhook

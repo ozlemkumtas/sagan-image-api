@@ -286,7 +286,7 @@ app.post('/generate-carousel', async (req, res) => {
 
   try {
     console.log('Generating carousel...');
-    const { jobs = [], dotStyle = 'default', logoStyle = 'dark', detailTemplate = 'modern-clean' } = req.body;
+    const { jobs = [], dotStyle = 'default', logoStyle = 'dark', coverTemplate = 'cover-default', detailTemplate = 'modern-clean' } = req.body;
 
     if (jobs.length === 0) {
       return res.status(400).json({ error: 'No jobs provided' });
@@ -303,7 +303,53 @@ app.post('/generate-carousel', async (req, res) => {
     const selectedLogo = LOGOS[logoStyle] || LOGOS.dark || '';
 
     // Generate COVER image
-    const coverHtml = generateCarouselCoverHTML(jobs, selectedDotStyle, selectedLogo);
+    let coverHtml;
+    const coverTemplatePath = path.join(__dirname, 'templates', `${coverTemplate}.html`);
+    if (coverTemplate !== 'cover-default' && fs.existsSync(coverTemplatePath)) {
+      // Use template file for cover
+      coverHtml = fs.readFileSync(coverTemplatePath, 'utf8');
+      coverHtml = coverHtml.replace(/\{\{primary\}\}/g, THEME.primary);
+      coverHtml = coverHtml.replace(/\{\{secondary\}\}/g, THEME.secondary);
+      coverHtml = coverHtml.replace(/\{\{background\}\}/g, THEME.background);
+      coverHtml = coverHtml.replace(/\{\{accent\}\}/g, THEME.accent);
+      coverHtml = coverHtml.replace(/\{\{logoBase64\}\}/g, selectedLogo);
+      coverHtml = coverHtml.replace(/\{\{logoLightBase64\}\}/g, selectedLogo);
+      coverHtml = coverHtml.replace(/\{\{logoBlueBase64\}\}/g, selectedLogo);
+      coverHtml = coverHtml.replace(/\{\{fontPPMoriSemiBold\}\}/g, FONTS['PPMori-SemiBold'] || '');
+      coverHtml = coverHtml.replace(/\{\{fontPPMoriRegular\}\}/g, FONTS['PPMori-Regular'] || '');
+      coverHtml = coverHtml.replace(/\{\{fontPPMoriBook\}\}/g, FONTS['PPMori-Book'] || '');
+      coverHtml = coverHtml.replace(/\{\{fontPPNeueMontreal\}\}/g, FONTS['PPNeueMontreal-Medium'] || '');
+      coverHtml = selectedDotStyle.length >= 5
+        ? coverHtml
+          .replace(/\{\{dot1Color\}\}/g, selectedDotStyle[0])
+          .replace(/\{\{dot2Color\}\}/g, selectedDotStyle[1])
+          .replace(/\{\{dot3Color\}\}/g, selectedDotStyle[2])
+          .replace(/\{\{dot4Color\}\}/g, selectedDotStyle[3])
+          .replace(/\{\{dot5Color\}\}/g, selectedDotStyle[4])
+        : coverHtml.replace(/\{\{dot\dColor\}\}/g, 'transparent');
+      // Use first job data for cover template placeholders
+      const firstJob = jobs[0];
+      coverHtml = coverHtml.replace(/\{\{jobTitle\}\}/g, firstJob.title || 'Job Title');
+      coverHtml = coverHtml.replace(/\{\{salary\}\}/g, firstJob.salary || 'TBD');
+      coverHtml = coverHtml.replace(/\{\{location\}\}/g, firstJob.location || 'Remote');
+      coverHtml = coverHtml.replace(/\{\{schedule\}\}/g, firstJob.schedule || 'Full-time');
+      coverHtml = coverHtml.replace(/\{\{jobCode\}\}/g, firstJob.jobCode || '');
+      const coverRespHTML = (firstJob.responsibilities || []).map(r => `<li>${r}</li>`).join('') || '<li>Details to be discussed</li>';
+      const coverQualHTML = (firstJob.qualifications || []).map(q => `<li>${q}</li>`).join('') || '<li>Qualifications to be discussed</li>';
+      coverHtml = coverHtml.replace(/\{\{responsibilities\}\}/g, coverRespHTML);
+      coverHtml = coverHtml.replace(/\{\{qualifications\}\}/g, coverQualHTML);
+      coverHtml = coverHtml.replace(/\{\{requirementPills\}\}/g,
+        (firstJob.qualifications || []).slice(0, 4).map(q => `<div class="req-pill req-item skill skill-tag">${q}</div>`).join('') || '<div class="req-pill req-item skill skill-tag">Experience required</div>'
+      );
+      coverHtml = coverHtml.replace(/\{\{keyPoints\}\}/g, '');
+      coverHtml = coverHtml.replace(/\{\{personPhotoUrl\}\}/g, randomChoice(PERSON_PHOTOS));
+      coverHtml = coverHtml.replace(/\{\{responsibilitiesList\}\}/g, coverRespHTML);
+      coverHtml = coverHtml.replace(/\{\{qualificationsList\}\}/g, coverQualHTML);
+      coverHtml = coverHtml.replace(/\{\{jobItems\}\}/g, '');
+    } else {
+      // Default cover (hardcoded WE ARE HIRING layout)
+      coverHtml = generateCarouselCoverHTML(jobs, selectedDotStyle, selectedLogo);
+    }
     await page.setContent(coverHtml, { waitUntil: 'load' });
     await page.waitForTimeout(500);
     const coverBuffer = await page.screenshot({ type: 'png' });
@@ -478,17 +524,17 @@ app.post('/api/ai-chat', async (req, res) => {
     const selectedDotStyle = DOT_STYLES[dotStyle] || DOT_STYLES.default;
 
     // Build conversation context
-    const systemPrompt = `Sen bir iş ilanı görseli tasarım asistanısın. Kullanıcı sana renk ve stil tercihleri söyler, sen de JSON formatında tasarım parametreleri döndürürsün.
+    const systemPrompt = `You are a job posting image design assistant. The user tells you their color and style preferences, and you return design parameters in JSON format.
 
-Mevcut iş ilanı: "${job.title}" - ${job.salary || 'Maaş belirtilmemiş'}
+Current job: "${job.title}" - ${job.salary || 'Salary not specified'}
 
-${currentDesign ? `Mevcut tasarım parametreleri: ${JSON.stringify(currentDesign)}` : 'Henüz tasarım yok.'}
+${currentDesign ? `Current design parameters: ${JSON.stringify(currentDesign)}` : 'No design applied yet.'}
 
-KURALLAR:
-- İş ilanı metinlerine (başlık, maaş, vb.) DOKUNMA
-- Sadece renk ve stil değiştir
-- Her yanıtta JSON bloğu VE kısa Türkçe açıklama döndür
-- JSON şu formatta olmalı:
+RULES:
+- DO NOT change the job content (title, salary, etc.)
+- Only change colors and style
+- Always return a JSON block AND a short English explanation
+- JSON must be in this format:
 
 \`\`\`json
 {
@@ -500,7 +546,7 @@ KURALLAR:
   "textColor": "#hex",
   "buttonColor": "#hex",
   "buttonTextColor": "#hex",
-  "replyMessage": "Kısa Türkçe açıklama"
+  "replyMessage": "Short English explanation"
 }
 \`\`\``;
 
@@ -523,8 +569,8 @@ KURALLAR:
 
     // Prepend system context as first model turn (more compatible approach)
     const fullContents = [
-      { role: 'user', parts: [{ text: 'Sistem talimatları: ' + systemPrompt }] },
-      { role: 'model', parts: [{ text: 'Anlaşıldı, tasarım asistanı olarak yardımcı olacağım. JSON formatında renk önerileri sunacağım.' }] },
+      { role: 'user', parts: [{ text: 'System instructions: ' + systemPrompt }] },
+      { role: 'model', parts: [{ text: 'Understood. I will act as a design assistant and provide color suggestions in JSON format.' }] },
       ...geminiContents
     ];
 
@@ -579,7 +625,7 @@ KURALLAR:
 
     // Fallback reply
     if (!replyMessage) {
-      replyMessage = colors ? 'Tasarım güncellendi!' : 'Anlayamadım, biraz daha açıklar mısın?';
+      replyMessage = colors ? 'Design updated!' : "I didn't quite understand. Could you describe it differently?";
     }
 
     // Generate HTML with AI colors but FIXED job text

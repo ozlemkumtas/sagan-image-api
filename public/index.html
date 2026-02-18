@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sagan Image Generator</title>
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
   <div class="app">
@@ -81,12 +81,13 @@
 
             <!-- Carousel Template Selection -->
             <div class="option-group" id="carouselTemplateGroup" style="display:none;">
-              <label>Cover Template <span class="template-tag">Kapak</span></label>
+              <label>Cover Template <span class="template-tag">Cover</span></label>
               <select id="carouselCoverSelect">
                 <option value="cover-default">Default Cover (WE ARE HIRING)</option>
+                <option value="bold-gradient">Bold Gradient Cover</option>
               </select>
 
-              <label style="margin-top:16px;">Slide Template <span class="template-tag">Her İlan</span></label>
+              <label style="margin-top:16px;">Slide Template <span class="template-tag">Per Job</span></label>
               <select id="carouselDetailSelect">
                 <option value="modern-clean">Modern Clean</option>
                 <option value="bold-gradient">Bold Gradient</option>
@@ -176,19 +177,19 @@
                   <div class="ai-title">AI Design Assistant</div>
                   <button class="ai-reset-btn" onclick="resetAIChat()" title="Reset chat">↺ Reset</button>
                 </div>
-                <p class="ai-description">Seçili bir ilan için tasarımı sohbet ederek yönet. Renk, stil, düzen hakkında istediğini söyle.</p>
+                <p class="ai-description">Chat to customize the design for a selected job. Tell it what you want — colors, style, layout.</p>
 
                 <!-- Chat Messages -->
                 <div class="ai-chat-messages" id="aiChatMessages">
                   <div class="ai-chat-bubble ai-bubble">
-                    Merhaba! Bir iş ilanı seç ve tasarım hakkında ne istediğini söyle. Örneğin: <em>"Koyu mavi arka plan, sarı maaş rengi"</em> veya <em>"Daha minimal bir görünüm"</em>
+                    Hello! Select a job and tell me what you want for the design. For example: <em>"Dark blue background, yellow salary"</em> or <em>"More minimal look"</em>
                   </div>
                 </div>
 
                 <!-- Chat Input -->
                 <div class="ai-chat-input-area">
                   <textarea id="aiChatInput"
-                    placeholder="Tasarım isteğini yaz... (Enter ile gönder)"
+                    placeholder="Describe your design request... (Enter to send)"
                     rows="2"
                     onkeydown="handleAIChatKey(event)"></textarea>
                   <button class="ai-send-btn" id="aiSendBtn" onclick="sendAIMessage()" disabled>
@@ -200,18 +201,18 @@
               </div>
 
               <div class="ai-right">
-                <div class="ai-preview-label">Önizleme</div>
+                <div class="ai-preview-label">Preview</div>
                 <div class="ai-preview" id="aiPreview">
                   <div class="ai-placeholder">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <p>Bir ilan seç ve tasarımını anlat</p>
+                    <p>Select a job and describe your design</p>
                   </div>
                 </div>
                 <div class="ai-actions" id="aiActions" style="display:none;">
-                  <button class="btn-secondary" onclick="downloadAIImage()">İndir</button>
-                  <button class="btn-primary" onclick="saveAIToTemplates()">+ Templates'e Ekle</button>
+                  <button class="btn-secondary" onclick="downloadAIImage()">Download</button>
+                  <button class="btn-primary" onclick="saveAIToTemplates()">+ Add to Templates</button>
                 </div>
               </div>
             </div>
@@ -255,6 +256,6 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>
