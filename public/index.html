@@ -260,48 +260,208 @@
       <!-- AI Template Page -->
       <section class="page" id="page-ai-template">
         <div class="ai-template-page">
+
+          <!-- LEFT: Controls -->
           <div class="ai-template-left">
             <div class="panel">
               <div class="panel-header">
                 <h2>AI Template Generator</h2>
               </div>
               <div class="ai-template-form">
-                <div class="ai-template-field">
-                  <label>Template Name</label>
-                  <input type="text" id="aiTemplateName" placeholder="e.g. purple-minimal" maxlength="40">
-                </div>
-                <div class="ai-template-field">
-                  <label>Describe your template</label>
-                  <textarea id="aiTemplatePrompt" rows="6"
-                    placeholder="Describe the style, colors, layout... e.g.:
 
-Minimalist design with purple gradient background. White text, gold accents. Job title large on the left, clean info boxes on the right. Modern sans-serif typography. Abstract geometric shapes in corners."></textarea>
-                </div>
-                <div class="ai-template-examples">
-                  <div class="examples-label">Quick examples:</div>
-                  <div class="examples-chips">
-                    <button class="example-chip" onclick="fillExample('Dark navy background with neon green accents. Futuristic, tech-inspired look. Job title in large bold font.')">Dark Neon</button>
-                    <button class="example-chip" onclick="fillExample('Warm sunset gradient from orange to pink. Clean white text. Elegant and professional with rounded elements.')">Sunset Warm</button>
-                    <button class="example-chip" onclick="fillExample('Clean white background with subtle gray elements. Minimalist Swiss-style typography. Blue salary highlight.')">Clean Minimal</button>
-                    <button class="example-chip" onclick="fillExample('Bold black and yellow design. High contrast, editorial magazine style. Large typography.')">Bold Magazine</button>
+                <!-- 1. RENK TONU -->
+                <div class="selector-group">
+                  <div class="selector-label">Renk Tonu</div>
+                  <div class="selector-btns" id="colorToneGroup">
+                    <button class="sel-btn active" data-group="colorTone" data-value="light">☀️ Açık</button>
+                    <button class="sel-btn" data-group="colorTone" data-value="dark">🌙 Koyu</button>
+                    <button class="sel-btn" data-group="colorTone" data-value="colorful">🎨 Renkli</button>
                   </div>
                 </div>
+
+                <!-- 2. STİL -->
+                <div class="selector-group">
+                  <div class="selector-label">Tasarım Stili</div>
+                  <div class="selector-btns" id="styleGroup">
+                    <button class="sel-btn active" data-group="style" data-value="minimal">Minimal</button>
+                    <button class="sel-btn" data-group="style" data-value="bold">Bold</button>
+                    <button class="sel-btn" data-group="style" data-value="corporate">Kurumsal</button>
+                    <button class="sel-btn" data-group="style" data-value="modern">Modern</button>
+                  </div>
+                </div>
+
+                <!-- 3. VURGU -->
+                <div class="selector-group">
+                  <div class="selector-label">Ne Öne Çıksın?</div>
+                  <div class="selector-btns" id="emphasisGroup">
+                    <button class="sel-btn active" data-group="emphasis" data-value="balanced">Dengeli</button>
+                    <button class="sel-btn" data-group="emphasis" data-value="salary">💰 Maaş</button>
+                    <button class="sel-btn" data-group="emphasis" data-value="title">📌 Pozisyon</button>
+                  </div>
+                </div>
+
+                <!-- 4. RENK PALETİ -->
+                <div class="selector-group">
+                  <div class="selector-label">Renk Paleti</div>
+                  <div class="palette-grid">
+                    <button class="palette-card active" data-palette="classic" title="Classic Sagan">
+                      <div class="palette-swatches">
+                        <span style="background:#ede9e5"></span>
+                        <span style="background:#093a3e"></span>
+                        <span style="background:#25a2ff"></span>
+                        <span style="background:#f5b801"></span>
+                      </div>
+                      <div class="palette-name">Classic</div>
+                    </button>
+                    <button class="palette-card" data-palette="dark" title="Dark Pro">
+                      <div class="palette-swatches">
+                        <span style="background:#093a3e"></span>
+                        <span style="background:#25a2ff"></span>
+                        <span style="background:#ffffff"></span>
+                        <span style="background:#f5b801"></span>
+                      </div>
+                      <div class="palette-name">Dark Pro</div>
+                    </button>
+                    <button class="palette-card" data-palette="gold" title="Bold Gold">
+                      <div class="palette-swatches">
+                        <span style="background:#1a1a1a"></span>
+                        <span style="background:#f5b801"></span>
+                        <span style="background:#ffffff"></span>
+                        <span style="background:#25a2ff"></span>
+                      </div>
+                      <div class="palette-name">Bold Gold</div>
+                    </button>
+                    <button class="palette-card" data-palette="coral" title="Coral Warm">
+                      <div class="palette-swatches">
+                        <span style="background:#ede9e5"></span>
+                        <span style="background:#ff7455"></span>
+                        <span style="background:#093a3e"></span>
+                        <span style="background:#f5b801"></span>
+                      </div>
+                      <div class="palette-name">Coral</div>
+                    </button>
+                    <button class="palette-card" data-palette="mint" title="Mint Fresh">
+                      <div class="palette-swatches">
+                        <span style="background:#e8f8f0"></span>
+                        <span style="background:#73e491"></span>
+                        <span style="background:#093a3e"></span>
+                        <span style="background:#25a2ff"></span>
+                      </div>
+                      <div class="palette-name">Mint</div>
+                    </button>
+                    <button class="palette-card" data-palette="purple" title="Purple Modern">
+                      <div class="palette-swatches">
+                        <span style="background:#1a1040"></span>
+                        <span style="background:#796aff"></span>
+                        <span style="background:#ffffff"></span>
+                        <span style="background:#f5b801"></span>
+                      </div>
+                      <div class="palette-name">Purple</div>
+                    </button>
+                    <button class="palette-card" data-palette="blue-white" title="Clean Blue">
+                      <div class="palette-swatches">
+                        <span style="background:#ffffff"></span>
+                        <span style="background:#25a2ff"></span>
+                        <span style="background:#093a3e"></span>
+                        <span style="background:#f5b801"></span>
+                      </div>
+                      <div class="palette-name">Clean Blue</div>
+                    </button>
+                    <button class="palette-card" data-palette="vibrant" title="Vibrant Mix">
+                      <div class="palette-swatches">
+                        <span style="background:#ede9e5"></span>
+                        <span style="background:#796aff"></span>
+                        <span style="background:#ff7455"></span>
+                        <span style="background:#73e491"></span>
+                      </div>
+                      <div class="palette-name">Vibrant</div>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 5. LOGO STİLİ -->
+                <div class="selector-group">
+                  <div class="selector-label">Logo Stili</div>
+                  <div class="logo-options">
+                    <button class="logo-btn active" data-logo="dark" title="Dark Logo">
+                      <img src="/api/logo/dark" alt="Dark" onerror="this.parentElement.innerHTML='Dark'">
+                    </button>
+                    <button class="logo-btn dark-bg" data-logo="light" title="Light Logo">
+                      <img src="/api/logo/light" alt="Light" onerror="this.parentElement.innerHTML='Light'">
+                    </button>
+                    <button class="logo-btn" data-logo="blue" title="Blue Logo">
+                      <img src="/api/logo/blue" alt="Blue" onerror="this.parentElement.innerHTML='Blue'">
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 6. DOT STİLİ -->
+                <div class="selector-group">
+                  <div class="selector-label">Nokta Renkleri</div>
+                  <div class="dot-options">
+                    <button class="dot-btn active" data-style="default" title="Default">
+                      <span style="background:#f5b801"></span><span style="background:#73e491"></span>
+                      <span style="background:#25a2ff"></span><span style="background:#ff7455"></span>
+                      <span style="background:#9e988f"></span>
+                    </button>
+                    <button class="dot-btn" data-style="vibrant" title="Vibrant">
+                      <span style="background:#796aff"></span><span style="background:#25a2ff"></span>
+                      <span style="background:#73e491"></span><span style="background:#ff7455"></span>
+                      <span style="background:#f5b801"></span>
+                    </button>
+                    <button class="dot-btn" data-style="warm" title="Warm">
+                      <span style="background:#ff7455"></span><span style="background:#f5b801"></span>
+                      <span style="background:#611f2c"></span><span style="background:#9e988f"></span>
+                      <span style="background:#cac1b4"></span>
+                    </button>
+                    <button class="dot-btn" data-style="cool" title="Cool">
+                      <span style="background:#796aff"></span><span style="background:#25a2ff"></span>
+                      <span style="background:#093a3e"></span><span style="background:#73e491"></span>
+                      <span style="background:#9e988f"></span>
+                    </button>
+                    <button class="dot-btn" data-style="mono" title="Mono">
+                      <span style="background:#093a3e"></span><span style="background:#25a2ff"></span>
+                      <span style="background:#73e491"></span><span style="background:#9e988f"></span>
+                      <span style="background:#dbd7d1"></span>
+                    </button>
+                    <button class="dot-btn" data-style="none" title="No Dots">
+                      <span style="background:#ddd"></span><span style="background:#ddd"></span>
+                      <span style="background:#ddd"></span><span style="background:#ddd"></span>
+                      <span style="background:#ddd"></span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 7. EKSTRA NOT -->
+                <div class="selector-group">
+                  <div class="selector-label">Ekstra Not <span style="font-weight:400;text-transform:none;letter-spacing:0;">(isteğe bağlı)</span></div>
+                  <textarea id="aiTemplatePrompt" rows="3"
+                    placeholder="Eklemek istediğin bir şey varsa yaz... Örn: köşelerde geometrik şekiller olsun, başlık çok büyük olsun, çok boşluklu olsun"></textarea>
+                </div>
+
+                <!-- 8. TEMPLATE ADI -->
+                <div class="selector-group">
+                  <div class="selector-label">Template Adı <span style="font-weight:400;text-transform:none;letter-spacing:0;">(isteğe bağlı)</span></div>
+                  <input type="text" id="aiTemplateName" placeholder="Otomatik isim verilir" maxlength="40">
+                </div>
+
                 <button class="btn-generate" id="aiTemplateGenBtn" onclick="generateAITemplate()">
-                  Generate Template with AI
+                  ✨ AI ile Template Üret
                 </button>
                 <div class="ai-template-note">
-                  Generated templates are saved and appear in the Template Gallery
+                  Üretilen template'ler Template Gallery'ye kaydedilir
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- RIGHT: Preview + History -->
           <div class="ai-template-right">
             <div class="panel ai-template-preview-panel">
               <div class="panel-header">
                 <h2>Preview</h2>
                 <div id="aiTemplatePreviewActions" style="display:none;">
-                  <button class="btn-secondary" style="padding:8px 16px;font-size:14px;" onclick="downloadAITemplatePreview()">Download</button>
+                  <button class="btn-secondary" style="padding:8px 16px;font-size:14px;" onclick="downloadAITemplatePreview()">İndir</button>
                 </div>
               </div>
               <div class="ai-template-preview-wrap" id="aiTemplatePreviewWrap">
@@ -309,17 +469,17 @@ Minimalist design with purple gradient background. White text, gold accents. Job
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
-                  <p style="font-size:15px;">AI-generated preview will appear here</p>
+                  <p style="font-size:15px;">Seçimlerini yap ve üret butonuna bas</p>
                 </div>
               </div>
             </div>
 
             <div class="panel ai-template-history-panel">
               <div class="panel-header">
-                <h2>Recently Generated</h2>
+                <h2>Son Üretilenler</h2>
               </div>
               <div class="ai-template-history" id="aiTemplateHistory">
-                <div style="padding:24px;color:#999;font-size:14px;text-align:center;">No templates generated yet</div>
+                <div style="padding:24px;color:#999;font-size:14px;text-align:center;">Henüz template üretilmedi</div>
               </div>
             </div>
           </div>

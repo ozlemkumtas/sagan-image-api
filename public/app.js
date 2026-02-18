@@ -778,12 +778,105 @@ function useAITemplate() {
 
 let aiTemplatePreviewImage = null;
 
+// Selector state
+const aiSelections = {
+  colorTone: 'light',
+  style: 'minimal',
+  emphasis: 'balanced',
+  palette: 'classic',
+  logoStyle: 'dark',
+  dotStyle: 'default'
+};
+
+// Palette descriptions for prompt building
+const PALETTE_PROMPTS = {
+  'classic':    'cream background (#ede9e5), dark teal headings (#093a3e), Sagan blue (#25a2ff) accents, yellow (#f5b801) highlights',
+  'dark':       'dark teal background (#093a3e), Sagan blue (#25a2ff) accents, white text, yellow (#f5b801) CTA button',
+  'gold':       'very dark near-black background (#1a1a1a), gold/yellow (#f5b801) as primary accent, white text, blue (#25a2ff) secondary',
+  'coral':      'cream background (#ede9e5), coral (#ff7455) as main accent, dark teal (#093a3e) text, yellow (#f5b801) highlights',
+  'mint':       'very light mint background (#e8f8f0), mint green (#73e491) accents, dark teal (#093a3e) text, Sagan blue (#25a2ff)',
+  'purple':     'very dark purple-navy background (#1a1040), purple (#796aff) as main accent, white text, gold (#f5b801) highlights',
+  'blue-white': 'clean white background, Sagan blue (#25a2ff) as main color, dark teal (#093a3e) text, yellow (#f5b801) accents',
+  'vibrant':    'cream background (#ede9e5), purple (#796aff) and coral (#ff7455) as lively accents, mint green (#73e491) touches'
+};
+
+const COLOR_TONE_PROMPTS = {
+  'light':    'Light, airy feel with a pale or cream background. Bright and welcoming.',
+  'dark':     'Dark, premium feel with a very dark background. Sophisticated and bold.',
+  'colorful': 'Vibrant and energetic. Use multiple Sagan brand colors together. Eye-catching.'
+};
+
+const STYLE_PROMPTS = {
+  'minimal':   'Clean, minimalist layout with lots of white space. Simple shapes, no clutter.',
+  'bold':      'Bold, high-impact design. Large typography, strong contrast, confident layout.',
+  'corporate': 'Professional, corporate look. Structured layout, clean sections, trustworthy feel.',
+  'modern':    'Modern and contemporary. Geometric elements, dynamic layout, fresh design.'
+};
+
+const EMPHASIS_PROMPTS = {
+  'balanced': 'Job title and salary are equally prominent.',
+  'salary':   'The salary range should be the most visually dominant element — very large, highlighted.',
+  'title':    'The job title should be the most visually dominant element — very large, full-width.'
+};
+
+function buildAIPrompt() {
+  const extraNote = document.getElementById('aiTemplatePrompt').value.trim();
+  const parts = [
+    COLOR_TONE_PROMPTS[aiSelections.colorTone],
+    STYLE_PROMPTS[aiSelections.style],
+    `Color palette: ${PALETTE_PROMPTS[aiSelections.palette]}`,
+    EMPHASIS_PROMPTS[aiSelections.emphasis]
+  ];
+  if (extraNote) parts.push(`Additional request: ${extraNote}`);
+  return parts.join(' ');
+}
+
+// Init selector buttons
+document.addEventListener('DOMContentLoaded', () => {
+  // Selector buttons (color tone, style, emphasis)
+  document.querySelectorAll('.sel-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.group;
+      document.querySelectorAll(`.sel-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      aiSelections[group] = btn.dataset.value;
+    });
+  });
+
+  // Palette cards
+  document.querySelectorAll('.palette-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.palette-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      aiSelections.palette = card.dataset.palette;
+    });
+  });
+
+  // AI Template logo buttons (separate from Generate tab)
+  document.querySelectorAll('#page-ai-template .logo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#page-ai-template .logo-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      aiSelections.logoStyle = btn.dataset.logo;
+    });
+  });
+
+  // AI Template dot buttons (separate from Generate tab)
+  document.querySelectorAll('#page-ai-template .dot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#page-ai-template .dot-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      aiSelections.dotStyle = btn.dataset.style;
+    });
+  });
+});
+
 function fillExample(text) {
   document.getElementById('aiTemplatePrompt').value = text;
 }
 
 async function generateAITemplate() {
-  const prompt = document.getElementById('aiTemplatePrompt').value.trim();
+  const prompt = buildAIPrompt();
   const nameInput = document.getElementById('aiTemplateName').value.trim();
 
   if (!prompt) {
