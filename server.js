@@ -1187,7 +1187,7 @@ STRICT REQUIREMENTS:
    - {{salary}} - salary range text (ALREADY includes $ symbol, e.g. "$2,500 - $3,500" — do NOT add $ prefix/icon)
    - {{location}} - location text
    - {{schedule}} - work schedule text
-   - {{jobCode}} - job reference code (MAY BE EMPTY — show as plain text only, no "REF:" or "Code:" label)
+   - {{jobCode}} - job reference code (MAY BE EMPTY — if NOT empty, place it DIRECTLY BELOW the job title on its own line, small muted text: font-size 14px, color #888, font-weight 400, no label prefix, no parentheses unless you stylistically want them. If empty, render nothing at all.)
    - {{responsibilities}} - HTML <li> items for responsibilities list
    - {{qualifications}} - HTML <li> items for qualifications list
    - {{dot1Color}} through {{dot5Color}} - decorative dot colors (use these as-is for any dot/circle decorations)

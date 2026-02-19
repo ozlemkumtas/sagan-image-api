@@ -487,6 +487,9 @@ async function loadTemplates() {
 
   const templates = serverTemplates.filter(t => !hiddenTemplates.includes(t.id));
 
+  // Sync template dropdown with server templates (picks up AI-generated ones)
+  syncTemplateDropdown(serverTemplates);
+
   let html = '';
 
   // Saved custom templates section
@@ -535,6 +538,18 @@ async function loadTemplates() {
   }
 
   grid.innerHTML = html;
+}
+
+// Add any missing templates to the #templateSelect dropdown
+function syncTemplateDropdown(templates) {
+  const select = document.getElementById('templateSelect');
+  if (!select) return;
+  templates.forEach(t => {
+    const exists = Array.from(select.options).some(o => o.value === t.id);
+    if (!exists) {
+      select.add(new Option(t.name, t.id));
+    }
+  });
 }
 
 // Delete a saved custom template
@@ -996,6 +1011,16 @@ async function generateAITemplate() {
 
     // Save to history
     saveAITemplateHistory(data.templateId, prompt);
+
+    // Add to template dropdown immediately (so it's usable in Generate Images tab)
+    const select = document.getElementById('templateSelect');
+    if (select) {
+      const exists = Array.from(select.options).some(o => o.value === data.templateId);
+      if (!exists) {
+        const label = templateName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        select.add(new Option(`${label} (AI)`, data.templateId));
+      }
+    }
 
     // Refresh template gallery history
     loadAITemplateHistory();
