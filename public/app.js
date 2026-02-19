@@ -66,22 +66,22 @@ function updateTemplateVisibility() {
   document.getElementById('carouselTemplateGroup').style.display = isCarousel ? 'block' : 'none';
 }
 
-// Dot Style
+// Dot Style (Generate tab only — AI Template tab has its own handler)
 function initDotStyle() {
-  document.querySelectorAll('.dot-btn').forEach(btn => {
+  document.querySelectorAll('#page-generate .dot-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.dot-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-generate .dot-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.dotStyle = btn.dataset.style;
     });
   });
 }
 
-// Logo Style
+// Logo Style (Generate tab only — AI Template tab has its own handler)
 function initLogoStyle() {
-  document.querySelectorAll('.logo-btn').forEach(btn => {
+  document.querySelectorAll('#page-generate .logo-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.logo-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-generate .logo-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.logoStyle = btn.dataset.logo;
     });
@@ -822,11 +822,19 @@ const EMPHASIS_PROMPTS = {
   'title':    'The job title should be the most visually dominant element — very large, full-width.'
 };
 
+const DOT_COLOR_MAP = {
+  'default': ['#f5b801', '#73e491', '#25a2ff', '#ff7455', '#9e988f'],
+  'vibrant': ['#796aff', '#25a2ff', '#73e491', '#ff7455', '#f5b801'],
+  'warm':    ['#ff7455', '#f5b801', '#611f2c', '#9e988f', '#cac1b4'],
+  'cool':    ['#796aff', '#25a2ff', '#093a3e', '#73e491', '#9e988f'],
+  'none':    []
+};
+
 const BACKGROUND_PROMPTS = {
-  'cream': 'Background color: #ede9e5 (Sagan warm cream — the classic brand background).',
-  'white': 'Background color: #ffffff (clean white — bright and airy).',
-  'dark':  'Background color: #093a3e (Sagan dark teal — premium, sophisticated dark look). Use light/white text throughout.',
-  'blue':  'Background color: a deep professional blue (#0d2b4e or #1a3f6f). Use white text throughout.'
+  'cream': 'BACKGROUND (REQUIRED — overrides palette): body background MUST be #ede9e5 (Sagan warm cream). Use dark text.',
+  'white': 'BACKGROUND (REQUIRED — overrides palette): body background MUST be #ffffff (white). Use dark text.',
+  'dark':  'BACKGROUND (REQUIRED — overrides palette): body background MUST be #093a3e (Sagan dark teal). Use white/light text throughout.',
+  'blue':  'BACKGROUND (REQUIRED — overrides palette): body background MUST be #25a2ff (Sagan blue). Use white text and dark teal (#093a3e) accents throughout. Do NOT use a dark or black background.'
 };
 
 const OUTPUT_TYPE_PROMPTS = {
@@ -852,17 +860,28 @@ function buildAIPrompt() {
     const textVal = document.getElementById('customBgText').value.trim();
     const pickerVal = document.getElementById('customBgPicker').value;
     const customColor = textVal || pickerVal || '#ffffff';
-    bgPrompt = `Background color: ${customColor} (custom color chosen by user). Choose text colors with strong contrast against this background.`;
+    bgPrompt = `BACKGROUND (REQUIRED — overrides palette): body background MUST be ${customColor}. Choose text colors with strong contrast against this background.`;
   } else {
     bgPrompt = BACKGROUND_PROMPTS[aiSelections.background];
   }
+
+  // Dot colors — send exact hex values so Claude uses the right colors
+  const dotColors = DOT_COLOR_MAP[aiSelections.dotStyle] || DOT_COLOR_MAP.default;
+  const dotPrompt = dotColors.length > 0
+    ? `DECORATIVE DOTS (REQUIRED): use these exact colors for {{dot1Color}} through {{dot5Color}} and any dot/circle decorations: ${dotColors.join(', ')}.`
+    : 'No decorative dots.';
+
+  // Logo variant hint
+  const logoPrompt = `Logo: always use the {{logoBase64}} placeholder for the Sagan logo image.`;
 
   const outputTypePrompt = OUTPUT_TYPE_PROMPTS[aiSelections.outputType] || '';
   const parts = [
     `Color palette: ${PALETTE_PROMPTS[aiSelections.palette]}`,
     bgPrompt,
     STYLE_PROMPTS[aiSelections.style],
-    EMPHASIS_PROMPTS[aiSelections.emphasis]
+    EMPHASIS_PROMPTS[aiSelections.emphasis],
+    dotPrompt,
+    logoPrompt
   ];
   if (outputTypePrompt) parts.push(outputTypePrompt);
   if (decorationPrompt) parts.push(decorationPrompt);
