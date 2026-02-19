@@ -633,6 +633,9 @@ const aiSelections = {
   colorTone: 'light',
   style: 'minimal',
   emphasis: 'balanced',
+  headlineFontSize: 'medium',
+  headlineColor: 'dark-teal',
+  headlineCustomColor: '',
   palette: 'classic',
   logoStyle: 'dark',
   dotStyle: 'default',
@@ -735,6 +738,23 @@ function buildAIPrompt() {
   ];
   if (outputTypePrompt) parts.push(outputTypePrompt);
   if (decorationPrompt) parts.push(decorationPrompt);
+
+  // Headline text (Carousel Cover only)
+  if (aiSelections.outputType === 'carousel-cover') {
+    const hlText = (document.getElementById('headlineText')?.value.trim()) || 'We are Hiring';
+    const fontSizeMap = { small: '32–40px', medium: '48–58px', large: '64–74px', xlarge: '82–96px' };
+    const colorMap = {
+      'dark-teal': '#093a3e',
+      'blue': '#25a2ff',
+      'white': '#ffffff',
+      'yellow': '#f5b801',
+      'custom': aiSelections.headlineCustomColor || '#093a3e'
+    };
+    const hlColor = colorMap[aiSelections.headlineColor] || '#093a3e';
+    const hlSize = fontSizeMap[aiSelections.headlineFontSize] || '48–58px';
+    parts.push(`HEADLINE TEXT (REQUIRED): Display the text "${hlText}" very prominently near the top of the design. Font-size: ${hlSize}. Color: ${hlColor}. Use PP Mori SemiBold (font-weight 600). This is the main attention-grabbing heading of the carousel cover.`);
+  }
+
   if (extraNote) parts.push(`Additional request: ${extraNote}`);
   return parts.join(' ');
 }
@@ -744,6 +764,15 @@ function syncCustomBg(value, source) {
     document.getElementById('customBgText').value = value;
   } else if (/^#[0-9a-fA-F]{6}$/.test(value)) {
     document.getElementById('customBgPicker').value = value;
+  }
+}
+
+function syncHeadlineColor(value, source) {
+  aiSelections.headlineCustomColor = value;
+  if (source === 'picker') {
+    document.getElementById('headlineColorText').value = value;
+  } else if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+    document.getElementById('headlineColorPicker').value = value;
   }
 }
 
@@ -761,6 +790,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (group === 'background') {
         const customRow = document.getElementById('customBgRow');
         if (customRow) customRow.style.display = btn.dataset.value === 'custom' ? 'flex' : 'none';
+      }
+
+      // Show/hide headline text section for Carousel Cover
+      if (group === 'outputType') {
+        const hlGroup = document.getElementById('headlineTextGroup');
+        if (hlGroup) hlGroup.style.display = btn.dataset.value === 'carousel-cover' ? 'flex' : 'none';
+      }
+
+      // Show/hide headline custom color picker
+      if (group === 'headlineColor') {
+        const row = document.getElementById('headlineColorPickerRow');
+        if (row) row.style.display = btn.dataset.value === 'custom' ? 'flex' : 'none';
       }
     });
   });
@@ -997,5 +1038,6 @@ window.generateAITemplate = generateAITemplate;
 window.downloadAITemplatePreview = downloadAITemplatePreview;
 window.fillExample = fillExample;
 window.syncCustomBg = syncCustomBg;
+window.syncHeadlineColor = syncHeadlineColor;
 window.saveAITemplateToGallery = saveAITemplateToGallery;
 window.useHistoryTemplate = useHistoryTemplate;

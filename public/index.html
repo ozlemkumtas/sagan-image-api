@@ -173,6 +173,43 @@
                   </div>
                 </div>
 
+                <!-- HEADLINE TEXT (Carousel Cover only) -->
+                <div class="selector-group" id="headlineTextGroup" style="display:none;">
+                  <div class="selector-label">Headline Text <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:0.6;">(carousel cover)</span></div>
+                  <input type="text" id="headlineText" value="We are Hiring" maxlength="50" placeholder="We are Hiring">
+                  <div class="selector-label" style="margin-top:10px;">Font Size</div>
+                  <div class="selector-btns">
+                    <button class="sel-btn" data-group="headlineFontSize" data-value="small">Small</button>
+                    <button class="sel-btn active" data-group="headlineFontSize" data-value="medium">Medium</button>
+                    <button class="sel-btn" data-group="headlineFontSize" data-value="large">Large</button>
+                    <button class="sel-btn" data-group="headlineFontSize" data-value="xlarge">XLarge</button>
+                  </div>
+                  <div class="selector-label" style="margin-top:10px;">Headline Color</div>
+                  <div class="selector-btns">
+                    <button class="sel-btn bg-btn active" data-group="headlineColor" data-value="dark-teal">
+                      <span class="bg-dot" style="background:#093a3e;"></span>Dark Teal
+                    </button>
+                    <button class="sel-btn bg-btn" data-group="headlineColor" data-value="blue">
+                      <span class="bg-dot" style="background:#25a2ff;"></span>Blue
+                    </button>
+                    <button class="sel-btn bg-btn" data-group="headlineColor" data-value="white">
+                      <span class="bg-dot" style="background:#ffffff;border:1px solid #ccc;"></span>White
+                    </button>
+                    <button class="sel-btn bg-btn" data-group="headlineColor" data-value="yellow">
+                      <span class="bg-dot" style="background:#f5b801;"></span>Yellow
+                    </button>
+                    <button class="sel-btn bg-btn" data-group="headlineColor" data-value="custom">
+                      <span class="bg-dot" style="background:conic-gradient(#f5b801,#73e491,#25a2ff,#ff7455,#796aff,#f5b801);"></span>Custom
+                    </button>
+                  </div>
+                  <div class="custom-bg-row" id="headlineColorPickerRow" style="display:none;">
+                    <input type="color" id="headlineColorPicker" value="#093a3e"
+                      oninput="syncHeadlineColor(this.value, 'picker')">
+                    <input type="text" id="headlineColorText" placeholder="#hex or color name..."
+                      oninput="syncHeadlineColor(this.value, 'text')">
+                  </div>
+                </div>
+
                 <!-- 1. COLOR PALETTE -->
                 <div class="selector-group">
                   <div class="selector-label">Color Palette</div>
@@ -371,6 +408,6 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=21"></script>
 </body>
 </html>
