@@ -343,7 +343,10 @@ async function generateImages() {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to generate');
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || err.message || 'Failed to generate carousel');
+      }
 
       const data = await response.json();
       state.generatedImages = [
@@ -375,7 +378,15 @@ async function generateImages() {
           })
         });
 
-        if (!response.ok) throw new Error('Failed to generate');
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          const msg = err.error || err.message || 'Failed to generate';
+          // If AI template not found, give a clearer actionable message
+          if (state.template.startsWith('ai-') && msg.toLowerCase().includes('not found')) {
+            throw new Error(`AI template "${state.template}" was lost after a server restart. Please select a built-in template instead.`);
+          }
+          throw new Error(msg);
+        }
 
         const blob = await response.blob();
         const reader = new FileReader();
@@ -393,8 +404,10 @@ async function generateImages() {
 
   } catch (error) {
     console.error('Error:', error);
-    showToast('Failed to generate images', 'error');
+    showToast(error.message || 'Failed to generate images', 'error');
   } finally {
+    btn.disabled = false;
+    btn.textContent = 'Generate Images';
     updateSelectedInfo();
   }
 }
