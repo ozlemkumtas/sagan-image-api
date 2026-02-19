@@ -309,42 +309,37 @@
                     placeholder="E.g.: geometric shapes in corners, make salary very large..."></textarea>
                 </div>
 
-                <!-- 4. ADVANCED (hidden) -->
-                <details class="advanced-section">
-                  <summary>Advanced Settings</summary>
-                  <div class="advanced-content">
-                    <div class="selector-group">
-                      <div class="selector-label">Emphasis</div>
-                      <div class="selector-btns">
-                        <button class="sel-btn active" data-group="emphasis" data-value="balanced">Balanced</button>
-                        <button class="sel-btn" data-group="emphasis" data-value="salary">💰 Salary</button>
-                        <button class="sel-btn" data-group="emphasis" data-value="title">📌 Job Title</button>
-                      </div>
-                    </div>
-                    <div class="selector-group">
-                      <div class="selector-label">Logo Style</div>
-                      <div class="logo-options">
-                        <button class="logo-btn active" data-logo="dark"><img src="/api/logo/dark" alt="Dark" onerror="this.parentElement.innerHTML='Dark'"></button>
-                        <button class="logo-btn dark-bg" data-logo="light"><img src="/api/logo/light" alt="Light" onerror="this.parentElement.innerHTML='Light'"></button>
-                        <button class="logo-btn" data-logo="blue"><img src="/api/logo/blue" alt="Blue" onerror="this.parentElement.innerHTML='Blue'"></button>
-                      </div>
-                    </div>
-                    <div class="selector-group">
-                      <div class="selector-label">Dot Colors</div>
-                      <div class="dot-options">
-                        <button class="dot-btn active" data-style="default"><span style="background:#f5b801"></span><span style="background:#73e491"></span><span style="background:#25a2ff"></span><span style="background:#ff7455"></span><span style="background:#9e988f"></span></button>
-                        <button class="dot-btn" data-style="vibrant"><span style="background:#796aff"></span><span style="background:#25a2ff"></span><span style="background:#73e491"></span><span style="background:#ff7455"></span><span style="background:#f5b801"></span></button>
-                        <button class="dot-btn" data-style="warm"><span style="background:#ff7455"></span><span style="background:#f5b801"></span><span style="background:#611f2c"></span><span style="background:#9e988f"></span><span style="background:#cac1b4"></span></button>
-                        <button class="dot-btn" data-style="cool"><span style="background:#796aff"></span><span style="background:#25a2ff"></span><span style="background:#093a3e"></span><span style="background:#73e491"></span><span style="background:#9e988f"></span></button>
-                        <button class="dot-btn" data-style="none"><span style="background:#ddd"></span><span style="background:#ddd"></span><span style="background:#ddd"></span><span style="background:#ddd"></span><span style="background:#ddd"></span></button>
-                      </div>
-                    </div>
-                    <div class="selector-group">
-                      <div class="selector-label">Template Name</div>
-                      <input type="text" id="aiTemplateName" placeholder="Auto-generated if empty" maxlength="40">
-                    </div>
+                <!-- 4. ADVANCED -->
+                <div class="selector-group">
+                  <div class="selector-label">Emphasis</div>
+                  <div class="selector-btns">
+                    <button class="sel-btn active" data-group="emphasis" data-value="balanced">Balanced</button>
+                    <button class="sel-btn" data-group="emphasis" data-value="salary">💰 Salary</button>
+                    <button class="sel-btn" data-group="emphasis" data-value="title">📌 Job Title</button>
                   </div>
-                </details>
+                </div>
+                <div class="selector-group">
+                  <div class="selector-label">Logo Style</div>
+                  <div class="logo-options">
+                    <button class="logo-btn active" data-logo="dark"><img src="/api/logo/dark" alt="Dark" onerror="this.parentElement.innerHTML='Dark'"></button>
+                    <button class="logo-btn dark-bg" data-logo="light"><img src="/api/logo/light" alt="Light" onerror="this.parentElement.innerHTML='Light'"></button>
+                    <button class="logo-btn" data-logo="blue"><img src="/api/logo/blue" alt="Blue" onerror="this.parentElement.innerHTML='Blue'"></button>
+                  </div>
+                </div>
+                <div class="selector-group">
+                  <div class="selector-label">Dot Colors</div>
+                  <div class="dot-options">
+                    <button class="dot-btn active" data-style="default"><span style="background:#f5b801"></span><span style="background:#73e491"></span><span style="background:#25a2ff"></span><span style="background:#ff7455"></span><span style="background:#9e988f"></span></button>
+                    <button class="dot-btn" data-style="vibrant"><span style="background:#796aff"></span><span style="background:#25a2ff"></span><span style="background:#73e491"></span><span style="background:#ff7455"></span><span style="background:#f5b801"></span></button>
+                    <button class="dot-btn" data-style="warm"><span style="background:#ff7455"></span><span style="background:#f5b801"></span><span style="background:#611f2c"></span><span style="background:#9e988f"></span><span style="background:#cac1b4"></span></button>
+                    <button class="dot-btn" data-style="cool"><span style="background:#796aff"></span><span style="background:#25a2ff"></span><span style="background:#093a3e"></span><span style="background:#73e491"></span><span style="background:#9e988f"></span></button>
+                    <button class="dot-btn" data-style="none"><span style="background:#ddd"></span><span style="background:#ddd"></span><span style="background:#ddd"></span><span style="background:#ddd"></span><span style="background:#ddd"></span></button>
+                  </div>
+                </div>
+                <div class="selector-group">
+                  <div class="selector-label">Template Name</div>
+                  <input type="text" id="aiTemplateName" placeholder="Auto-generated if empty" maxlength="40">
+                </div>
 
                 <button class="btn-generate" id="aiTemplateGenBtn" onclick="generateAITemplate()">
                   ✨ Generate with AI
