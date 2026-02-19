@@ -636,9 +636,9 @@ const aiSelections = {
   headlineFontSize: 'medium',
   headlineColor: 'dark-teal',
   headlineCustomColor: '',
-  titleColor: 'white',
+  titleColor: 'auto',
   titleCustomColor: '',
-  salaryColor: 'white',
+  salaryColor: 'auto',
   salaryCustomColor: '',
   palette: 'classic',
   logoStyle: 'dark',
@@ -753,15 +753,16 @@ function buildAIPrompt() {
     parts.push(`HEADLINE TEXT (REQUIRED): Display the text "${hlText}" very prominently near the top of the design. Font-size: ${hlSize}. Color: ${hlColor}. Use PP Mori SemiBold (font-weight 600). This is the main attention-grabbing heading of the carousel cover.`);
   }
 
-  // Job Title color
-  const colorMap = {
-    'white': '#ffffff', 'blue': '#25a2ff', 'coral': '#ff7455',
-    'custom-title':  aiSelections.titleCustomColor  || '#ffffff',
-    'custom-salary': aiSelections.salaryCustomColor || '#ffffff'
-  };
-  const titleHex  = aiSelections.titleColor  === 'custom' ? (aiSelections.titleCustomColor  || '#ffffff') : (colorMap[aiSelections.titleColor]  || '#ffffff');
-  const salaryHex = aiSelections.salaryColor === 'custom' ? (aiSelections.salaryCustomColor || '#ffffff') : (colorMap[aiSelections.salaryColor] || '#ffffff');
-  parts.push(`JOB TITLE ({{jobTitle}}) must use color ${titleHex}. SALARY VALUE ({{salary}}) must use color ${salaryHex}.`);
+  // Job Title & Salary color
+  if (aiSelections.titleColor === 'auto' && aiSelections.salaryColor === 'auto') {
+    parts.push(`JOB TITLE and SALARY colors: analyze the background and palette, then automatically choose the most readable and visually striking colors for each. Prioritize strong contrast and brand consistency.`);
+  } else {
+    const titleHex  = aiSelections.titleColor  === 'custom' ? (aiSelections.titleCustomColor  || '#ffffff') : null;
+    const salaryHex = aiSelections.salaryColor === 'custom' ? (aiSelections.salaryCustomColor || '#ffffff') : null;
+    const titlePart  = titleHex  ? `JOB TITLE ({{jobTitle}}) must use color ${titleHex}.`  : `JOB TITLE color: auto-choose the best readable color for the design.`;
+    const salaryPart = salaryHex ? `SALARY VALUE ({{salary}}) must use color ${salaryHex}.` : `SALARY color: auto-choose the best readable color for the design.`;
+    parts.push(`${titlePart} ${salaryPart}`);
+  }
 
   if (extraNote) parts.push(`Additional request: ${extraNote}`);
   return parts.join(' ');
