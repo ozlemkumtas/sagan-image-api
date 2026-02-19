@@ -1242,7 +1242,21 @@ select:focus {
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 0;
+}
+
+.ai-template-form .selector-group {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.ai-template-form .selector-group:first-child {
+  padding-top: 0;
+}
+
+.ai-template-form .selector-group:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .ai-template-field {
