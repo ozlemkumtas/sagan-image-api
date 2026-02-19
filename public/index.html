@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sagan Image Generator</title>
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <div class="app">
@@ -246,6 +246,36 @@
                       <div class="palette-swatches"><span style="background:#ede9e5"></span><span style="background:#796aff"></span><span style="background:#ff7455"></span><span style="background:#73e491"></span></div>
                       <div class="palette-name">Vibrant</div>
                     </button>
+                    <!-- Custom palette card (full width) -->
+                    <button class="palette-card palette-custom-card" data-palette="custom" style="grid-column:1/-1;">
+                      <div class="palette-swatches">
+                        <span id="customPalSwatch1" style="background:#25a2ff"></span>
+                        <span id="customPalSwatch2" style="background:#f5b801"></span>
+                        <span id="customPalSwatch3" style="background:#ff7455"></span>
+                        <span id="customPalSwatch4" style="background:#093a3e"></span>
+                      </div>
+                      <div class="palette-name">Custom →</div>
+                    </button>
+                  </div>
+
+                  <!-- Custom palette pickers (shown when Custom selected) -->
+                  <div class="custom-palette-row" id="customPaletteRow" style="display:none;">
+                    <div class="custom-pal-picker">
+                      <input type="color" id="cp1" value="#25a2ff" oninput="updateCustomPalette()">
+                      <span>Color 1</span>
+                    </div>
+                    <div class="custom-pal-picker">
+                      <input type="color" id="cp2" value="#f5b801" oninput="updateCustomPalette()">
+                      <span>Color 2</span>
+                    </div>
+                    <div class="custom-pal-picker">
+                      <input type="color" id="cp3" value="#ff7455" oninput="updateCustomPalette()">
+                      <span>Color 3</span>
+                    </div>
+                    <div class="custom-pal-picker">
+                      <input type="color" id="cp4" value="#093a3e" oninput="updateCustomPalette()">
+                      <span>Color 4</span>
+                    </div>
                   </div>
                 </div>
 
@@ -408,6 +438,6 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <script src="app.js?v=21"></script>
+  <script src="app.js?v=22"></script>
 </body>
 </html>

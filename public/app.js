@@ -728,8 +728,20 @@ function buildAIPrompt() {
   const logoPrompt = `Logo: always use the {{logoBase64}} placeholder for the Sagan logo image.`;
 
   const outputTypePrompt = OUTPUT_TYPE_PROMPTS[aiSelections.outputType] || '';
+
+  let palettePrompt;
+  if (aiSelections.palette === 'custom') {
+    const c1 = document.getElementById('cp1')?.value || '#25a2ff';
+    const c2 = document.getElementById('cp2')?.value || '#f5b801';
+    const c3 = document.getElementById('cp3')?.value || '#ff7455';
+    const c4 = document.getElementById('cp4')?.value || '#093a3e';
+    palettePrompt = `CUSTOM COLOR PALETTE (use ONLY these exact colors — REQUIRED): Color 1 (primary): ${c1}, Color 2 (accent): ${c2}, Color 3 (secondary accent): ${c3}, Color 4 (base/text): ${c4}. Build the entire design around these specific colors. Do not substitute with other colors.`;
+  } else {
+    palettePrompt = `Color palette: ${PALETTE_PROMPTS[aiSelections.palette]}`;
+  }
+
   const parts = [
-    `Color palette: ${PALETTE_PROMPTS[aiSelections.palette]}`,
+    palettePrompt,
     bgPrompt,
     STYLE_PROMPTS[aiSelections.style],
     EMPHASIS_PROMPTS[aiSelections.emphasis],
@@ -776,6 +788,19 @@ function syncHeadlineColor(value, source) {
   }
 }
 
+function updateCustomPalette() {
+  const c1 = document.getElementById('cp1')?.value || '#25a2ff';
+  const c2 = document.getElementById('cp2')?.value || '#f5b801';
+  const c3 = document.getElementById('cp3')?.value || '#ff7455';
+  const c4 = document.getElementById('cp4')?.value || '#093a3e';
+  // Sync swatches on the Custom card
+  const s = (id, color) => { const el = document.getElementById(id); if (el) el.style.background = color; };
+  s('customPalSwatch1', c1);
+  s('customPalSwatch2', c2);
+  s('customPalSwatch3', c3);
+  s('customPalSwatch4', c4);
+}
+
 // Init selector buttons
 document.addEventListener('DOMContentLoaded', () => {
   // Selector buttons (color tone, style, emphasis, background, decoration)
@@ -812,6 +837,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.palette-card').forEach(c => c.classList.remove('active'));
       card.classList.add('active');
       aiSelections.palette = card.dataset.palette;
+      const row = document.getElementById('customPaletteRow');
+      if (row) row.style.display = card.dataset.palette === 'custom' ? 'flex' : 'none';
     });
   });
 
@@ -1039,5 +1066,6 @@ window.downloadAITemplatePreview = downloadAITemplatePreview;
 window.fillExample = fillExample;
 window.syncCustomBg = syncCustomBg;
 window.syncHeadlineColor = syncHeadlineColor;
+window.updateCustomPalette = updateCustomPalette;
 window.saveAITemplateToGallery = saveAITemplateToGallery;
 window.useHistoryTemplate = useHistoryTemplate;
