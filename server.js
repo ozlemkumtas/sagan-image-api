@@ -488,11 +488,21 @@ app.get('/api/template-preview/:templateId', async (req, res) => {
 
     // Use requested dot style
     const dots = DOT_STYLES[dotStyleParam] || DOT_STYLES.default;
-    html = html.replace(/\{\{dot1Color\}\}/g, dots[0] || 'transparent');
-    html = html.replace(/\{\{dot2Color\}\}/g, dots[1] || 'transparent');
-    html = html.replace(/\{\{dot3Color\}\}/g, dots[2] || 'transparent');
-    html = html.replace(/\{\{dot4Color\}\}/g, dots[3] || 'transparent');
-    html = html.replace(/\{\{dot5Color\}\}/g, dots[4] || 'transparent');
+    if (dots.length === 0) {
+      // Hide dots completely — inject CSS so even non-placeholder dot elements disappear
+      html = html.replace('</head>', '<style>.dot,.dots-grid,[class*="dot-circle"],[class*="decorative-dot"]{display:none!important;}</style></head>');
+      html = html.replace(/\{\{dot1Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot2Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot3Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot4Color\}\}/g, 'transparent');
+      html = html.replace(/\{\{dot5Color\}\}/g, 'transparent');
+    } else {
+      html = html.replace(/\{\{dot1Color\}\}/g, dots[0]);
+      html = html.replace(/\{\{dot2Color\}\}/g, dots[1]);
+      html = html.replace(/\{\{dot3Color\}\}/g, dots[2]);
+      html = html.replace(/\{\{dot4Color\}\}/g, dots[3]);
+      html = html.replace(/\{\{dot5Color\}\}/g, dots[4]);
+    }
 
     // Sample job data
     html = html.replace(/\{\{jobTitle\}\}/g, 'Marketing Manager');

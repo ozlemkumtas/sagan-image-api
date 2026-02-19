@@ -1091,8 +1091,9 @@ async function generateAITemplate() {
   const isModify = !!_modifyTemplateId;
   const modReqText = isModify ? document.getElementById('modifyRequest').value.trim() : '';
 
-  // If modification mode with empty textarea → logo/dot-only change, skip AI and just re-preview
-  if (isModify && !modReqText) {
+  // If modification mode with empty textarea AND no special changes needed → just re-preview
+  // Exception: if dotStyle=none, we need AI to actually remove dot elements from HTML
+  if (isModify && !modReqText && _modifyDotStyle !== 'none') {
     const previewWrap = document.getElementById('aiTemplatePreviewWrap');
     previewWrap.innerHTML = `<div class="loading" style="padding:80px 24px;"><div class="spinner"></div><p>Applying changes...</p></div>`;
     try {
@@ -1129,12 +1130,19 @@ async function generateAITemplate() {
   const previewWrap = document.getElementById('aiTemplatePreviewWrap');
   previewWrap.innerHTML = `<div class="loading" style="padding:80px 24px;"><div class="spinner"></div><p>${isModify ? 'AI is modifying your template...' : 'AI is creating your template...'}</p></div>`;
 
+  // If none dots selected in modify mode, append removal instruction to Claude
+  let finalModReq = modReqText;
+  if (isModify && _modifyDotStyle === 'none') {
+    const dotRemoval = 'Remove all decorative dot and circle elements from the design completely (set their display to none or delete them from the HTML).';
+    finalModReq = finalModReq ? `${finalModReq}. ${dotRemoval}` : dotRemoval;
+  }
+
   const requestBody = isModify
     ? {
         prompt: '',
         templateName,
         baseTemplateId: _modifyTemplateId,
-        modificationRequest: modReqText
+        modificationRequest: finalModReq
       }
     : { prompt, templateName };
 
