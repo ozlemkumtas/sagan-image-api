@@ -624,14 +624,13 @@ function deleteCustomTemplate(id) {
   showToast('Template deleted');
 }
 
-// Preview a saved custom template
+// Preview a saved custom template — uses the new preview modal
 function previewCustomTemplate(id) {
   const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
-  const t = customTemplates.find(t => t.id === id);
+  const t = customTemplates.find(ct => ct.id === id);
   if (!t) return;
-
-  state.generatedImages = [t.imageBase64];
-  showModal();
+  // Show base64 image directly; "Use This Template" will select the original server template
+  showTemplatePreview(id, t.name, t.imageBase64, t.template || id);
 }
 
 // Hide template
@@ -679,8 +678,10 @@ function selectTemplate(id) {
 
 let templatePreviewId = null;
 
-function showTemplatePreview(id, name) {
-  templatePreviewId = id;
+// directSrc: base64/url to display directly (skip API fetch)
+// useId: the template ID passed to selectTemplate on "Use This Template" (overrides id)
+function showTemplatePreview(id, name, directSrc, useId) {
+  templatePreviewId = useId || id;
   const title = name || id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   document.getElementById('templatePreviewTitle').textContent = title;
 
@@ -689,18 +690,25 @@ function showTemplatePreview(id, name) {
 
   img.style.display = 'none';
   img.src = '';
-  spinner.style.display = 'block';
+
+  if (directSrc) {
+    // Use image directly (saved/custom templates with base64)
+    spinner.style.display = 'none';
+    img.src = directSrc;
+    img.style.display = 'block';
+  } else {
+    spinner.style.display = 'block';
+    img.onload = () => {
+      img.style.display = 'block';
+      spinner.style.display = 'none';
+    };
+    img.onerror = () => {
+      spinner.innerHTML = '<p style="color:#999;font-size:14px;padding:40px;">Preview not available</p>';
+    };
+    img.src = `${API_URL}/api/template-preview/${id}`;
+  }
 
   document.getElementById('templatePreviewModal').classList.add('open');
-
-  img.onload = () => {
-    img.style.display = 'block';
-    spinner.style.display = 'none';
-  };
-  img.onerror = () => {
-    spinner.innerHTML = '<p style="color:#999;font-size:14px;padding:40px;">Preview not available</p>';
-  };
-  img.src = `${API_URL}/api/template-preview/${id}`;
 }
 
 function closeTemplatePreview() {
