@@ -677,13 +677,14 @@ function selectTemplate(id) {
 // ============================================
 
 let templatePreviewId = null;
+let templatePreviewTitle = '';
 
 // directSrc: base64/url to display directly (skip API fetch)
 // useId: the template ID passed to selectTemplate on "Use This Template" (overrides id)
 function showTemplatePreview(id, name, directSrc, useId) {
   templatePreviewId = useId || id;
-  const title = name || id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  document.getElementById('templatePreviewTitle').textContent = title;
+  templatePreviewTitle = name || id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  document.getElementById('templatePreviewTitle').textContent = templatePreviewTitle;
 
   const img = document.getElementById('templatePreviewImg');
   const spinner = document.getElementById('templatePreviewSpinner');
@@ -714,6 +715,7 @@ function showTemplatePreview(id, name, directSrc, useId) {
 function closeTemplatePreview() {
   document.getElementById('templatePreviewModal').classList.remove('open');
   templatePreviewId = null;
+  templatePreviewTitle = '';
 }
 
 function usePreviewTemplate() {
@@ -724,13 +726,23 @@ function usePreviewTemplate() {
 }
 
 function modifyWithAI() {
+  // Grab the template name before closing (closeTemplatePreview clears it)
+  const prefillName = templatePreviewTitle;
   closeTemplatePreview();
+
+  // Navigate to AI Template tab
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('[data-page="ai-template"]').classList.add('active');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-ai-template').classList.add('active');
   loadAITemplateHistory();
-  showToast('Adjust settings and generate a new AI template');
+
+  // Prefill template name so the user can see which template they're modifying
+  const nameInput = document.getElementById('aiTemplateName');
+  if (nameInput && prefillName) {
+    nameInput.value = prefillName;
+    nameInput.focus();
+  }
 }
 
 // Toast
