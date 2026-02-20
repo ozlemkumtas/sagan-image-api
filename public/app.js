@@ -1,6 +1,85 @@
 // Sagan Image Generator - App
 
+let supabase = null;
+let currentUser = null;
+
 const API_URL = window.location.origin;
+
+async function initSupabase() {
+  try {
+    const res = await fetch('/api/config');
+    const cfg = await res.json();
+    if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+      supabase = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+      const { data: { session } } = await supabase.auth.getSession();
+      currentUser = session?.user || null;
+      updateAuthUI(!!currentUser, currentUser);
+      supabase.auth.onAuthStateChange((event, session) => {
+        currentUser = session?.user || null;
+        updateAuthUI(!!currentUser, currentUser);
+      });
+    }
+  } catch(e) { console.warn('Supabase init failed:', e); }
+}
+
+function openAuthModal(tab) {
+  document.getElementById('authModal').style.display = 'flex';
+  switchAuthTab(tab || 'login');
+  document.getElementById('authError').style.display = 'none';
+}
+
+function closeAuthModal(e) {
+  if (!e || e.target === document.getElementById('authModal')) {
+    document.getElementById('authModal').style.display = 'none';
+  }
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('authTabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('authTabSignup').classList.toggle('active', tab === 'signup');
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Log In' : 'Sign Up';
+  document.getElementById('authSubmitBtn').dataset.tab = tab;
+}
+
+async function submitAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass = document.getElementById('authPassword').value;
+  const tab = document.getElementById('authSubmitBtn').dataset.tab || 'login';
+  const errEl = document.getElementById('authError');
+  errEl.style.display = 'none';
+  if (!supabase) return;
+  try {
+    let result;
+    if (tab === 'login') {
+      result = await supabase.auth.signInWithPassword({ email, password: pass });
+    } else {
+      result = await supabase.auth.signUp({ email, password: pass });
+    }
+    if (result.error) throw result.error;
+    document.getElementById('authModal').style.display = 'none';
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+async function logoutUser() {
+  if (supabase) await supabase.auth.signOut();
+}
+
+function updateAuthUI(loggedIn, user) {
+  const badge = document.getElementById('authUserBadge');
+  const loginBtn = document.getElementById('authLoginBtn');
+  if (!badge || !loginBtn) return;
+  if (loggedIn && user) {
+    badge.style.display = 'flex';
+    document.getElementById('authUserEmail').textContent = user.email;
+    loginBtn.style.display = 'none';
+  } else {
+    badge.style.display = 'none';
+    loginBtn.style.display = 'block';
+  }
+}
 
 // State
 let state = {
@@ -28,6 +107,7 @@ let templateTab = 'single';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  initSupabase();
   initNavigation();
   initToggle();
   initDotStyle();
@@ -1310,13 +1390,13 @@ async function generateAITemplate() {
         document.getElementById('aiTemplatePreviewActions').style.display = 'flex';
 
         const thumb = await createThumbnail(aiTemplatePreviewImage, 800);
-        saveAITemplateHistory(data.templateId, prompt, aiSelections.outputType, thumb);
+        await saveAITemplateHistory({ templateId: data.templateId, prompt: prompt.substring(0, 100) + (prompt.length > 100 ? '...' : ''), outputType: aiSelections.outputType, previewImage: thumb, createdAt: new Date().toLocaleDateString('en-US') });
         loadAITemplateHistory();
       };
       reader.readAsDataURL(blob);
     } else {
       previewWrap.innerHTML = `<div style="padding:40px;text-align:center;color:#666;">Template saved as <strong>${data.templateId}</strong>.<br>View it in the Templates gallery.</div>`;
-      saveAITemplateHistory(data.templateId, prompt, aiSelections.outputType, null);
+      await saveAITemplateHistory({ templateId: data.templateId, prompt: prompt.substring(0, 100) + (prompt.length > 100 ? '...' : ''), outputType: aiSelections.outputType, previewImage: null, createdAt: new Date().toLocaleDateString('en-US') });
       loadAITemplateHistory();
     }
 
@@ -1364,21 +1444,54 @@ function saveAITemplateToGallery() {
   showToast('Saved to Template Gallery!', 'success');
 }
 
-function saveAITemplateHistory(templateId, prompt, outputType, previewImage) {
+async function saveAITemplateHistory(entry) {
+  if (supabase && currentUser) {
+    try {
+      await supabase.from('ai_template_history').insert({
+        user_id: currentUser.id,
+        template_id: entry.templateId || entry.id,
+        prompt: entry.prompt || '',
+        output_type: entry.outputType || 'single',
+        preview_image: entry.previewImage || ''
+      });
+      return;
+    } catch(e) { console.warn('Supabase save failed, falling back to localStorage', e); }
+  }
+  // fallback: localStorage
   const history = JSON.parse(localStorage.getItem('aiTemplateHistory') || '[]');
-  history.unshift({
-    templateId,
-    prompt: prompt.substring(0, 100) + (prompt.length > 100 ? '...' : ''),
-    createdAt: new Date().toLocaleDateString('en-US'),
-    outputType: outputType || 'single',
-    previewImage: previewImage || null   // stored thumbnail so preview works after server restart
-  });
-  // Keep only last 10
-  localStorage.setItem('aiTemplateHistory', JSON.stringify(history.slice(0, 10)));
+  history.unshift(entry);
+  if (history.length > 10) history.splice(10);
+  localStorage.setItem('aiTemplateHistory', JSON.stringify(history));
 }
 
-function loadAITemplateHistory() {
+async function loadAITemplateHistory() {
+  if (supabase && currentUser) {
+    try {
+      const { data, error } = await supabase
+        .from('ai_template_history')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+      if (!error && data) {
+        const history = data.map(r => ({
+          id: r.template_id,
+          templateId: r.template_id,
+          prompt: r.prompt,
+          outputType: r.output_type,
+          previewImage: r.preview_image,
+          savedAt: new Date(r.created_at).toLocaleDateString()
+        }));
+        renderAIHistory(history);
+        return;
+      }
+    } catch(e) { console.warn('Supabase load failed, falling back to localStorage', e); }
+  }
   const history = JSON.parse(localStorage.getItem('aiTemplateHistory') || '[]');
+  renderAIHistory(history);
+}
+
+function renderAIHistory(history) {
   const container = document.getElementById('aiTemplateHistory');
   if (!container) return;
 
@@ -1396,20 +1509,29 @@ function loadAITemplateHistory() {
         <div class="ai-history-top">
           <div>
             <div class="ai-history-name">${h.templateId}</div>
-            <div class="ai-history-date">${h.createdAt}${h.outputType ? ' · ' + h.outputType : ''}</div>
+            <div class="ai-history-date">${h.savedAt || h.createdAt || ''}${h.outputType ? ' · ' + h.outputType : ''}</div>
           </div>
-          <button class="ai-history-delete" onclick="event.stopPropagation(); deleteAIHistoryItem(${i})" title="Remove">×</button>
+          <button class="ai-history-delete" onclick="event.stopPropagation(); deleteAIHistoryItem('${h.templateId}')" title="Remove">×</button>
         </div>
-        <div class="ai-history-prompt">${h.prompt}</div>
+        <div class="ai-history-prompt">${h.prompt || ''}</div>
       </div>
     </div>
   `).join('');
 }
 
-function deleteAIHistoryItem(index) {
-  const history = JSON.parse(localStorage.getItem('aiTemplateHistory') || '[]');
-  history.splice(index, 1);
-  localStorage.setItem('aiTemplateHistory', JSON.stringify(history));
+async function deleteAIHistoryItem(templateId) {
+  if (supabase && currentUser) {
+    try {
+      await supabase.from('ai_template_history').delete()
+        .eq('user_id', currentUser.id)
+        .eq('template_id', templateId);
+    } catch(e) { console.warn('Supabase delete failed', e); }
+  } else {
+    const history = JSON.parse(localStorage.getItem('aiTemplateHistory') || '[]');
+    const updated = history.filter(h => h.id !== templateId && h.templateId !== templateId);
+    localStorage.setItem('aiTemplateHistory', JSON.stringify(updated));
+  }
+  renderAIHistory([]);
   loadAITemplateHistory();
   showToast('Removed from history');
 }
@@ -1500,3 +1622,8 @@ window.modifyWithAI = modifyWithAI;
 window.cancelModifyMode = cancelModifyMode;
 window.deleteAIHistoryItem = deleteAIHistoryItem;
 window.previewHistoryTemplate = previewHistoryTemplate;
+window.logoutUser = logoutUser;
+window.openAuthModal = openAuthModal;
+window.closeAuthModal = closeAuthModal;
+window.switchAuthTab = switchAuthTab;
+window.submitAuth = submitAuth;
