@@ -206,7 +206,9 @@ function renderJobs(searchQuery = '') {
     filteredJobs = state.jobs.filter(job =>
       job.title.toLowerCase().includes(searchQuery) ||
       (job.salary || '').toLowerCase().includes(searchQuery) ||
-      (job.location || '').toLowerCase().includes(searchQuery)
+      (job.location || '').toLowerCase().includes(searchQuery) ||
+      (job.requestId || '').toLowerCase().includes(searchQuery) ||
+      (job.requestName || '').toLowerCase().includes(searchQuery)
     );
   }
 
@@ -222,13 +224,18 @@ function renderJobs(searchQuery = '') {
     return;
   }
 
-  container.innerHTML = filteredJobs.map(job => `
+  container.innerHTML = filteredJobs.map(job => {
+    const requestBadge = (job.requestId || job.requestName)
+      ? `<div class="job-request-badge">${[job.requestId, job.requestName].filter(Boolean).join(' · ')}</div>`
+      : '';
+    return `
     <div class="job-card ${state.selectedJobs.has(job.id) ? 'selected' : ''}"
          data-id="${job.id}"
          onclick="toggleJob('${job.id}')">
       <div class="job-checkbox"></div>
       <div class="job-info">
         <div class="job-title">${job.title}</div>
+        ${requestBadge}
         <div class="job-meta">
           <span class="job-salary">${job.salary || 'Salary TBD'}</span>
           <span>${job.location}</span>
@@ -236,7 +243,8 @@ function renderJobs(searchQuery = '') {
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // Toggle Job Selection

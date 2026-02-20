@@ -266,6 +266,8 @@ app.get('/api/airtable/jobs', async (req, res) => {
         id: record.id,
         title: record.fields['Job Title'] || record.fields['Name'] || parsed.extractedTitle || 'Untitled',
         jobCode: record.fields['Job Code'] || record.fields['Code'] || '',
+        requestId: record.fields['Request ID'] || record.fields['Req ID'] || record.fields['ID'] || '',
+        requestName: record.fields['Request Name'] || record.fields['Hiring Request Name'] || record.fields['Request'] || '',
         salary: record.fields['Salary'] || record.fields['Salary Range'] || parsed.salary || '',
         location: record.fields['Location'] || parsed.location || 'Remote',
         schedule: record.fields['Schedule'] || record.fields['Work Schedule'] || parsed.schedule || 'Full-time',
