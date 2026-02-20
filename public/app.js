@@ -1,6 +1,6 @@
 // Sagan Image Generator - App
 
-let supabase = null;
+let supabaseClient = null;
 let currentUser = null;
 
 const API_URL = window.location.origin;
@@ -10,11 +10,11 @@ async function initSupabase() {
     const res = await fetch('/api/config');
     const cfg = await res.json();
     if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
-      supabase = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
-      const { data: { session } } = await supabase.auth.getSession();
+      supabaseClient = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+      const { data: { session } } = await supabaseClient.auth.getSession();
       currentUser = session?.user || null;
       updateAuthUI(!!currentUser, currentUser);
-      supabase.auth.onAuthStateChange((event, session) => {
+      supabaseClient.auth.onAuthStateChange((event, session) => {
         currentUser = session?.user || null;
         updateAuthUI(!!currentUser, currentUser);
       });
@@ -47,13 +47,13 @@ async function submitAuth() {
   const tab = document.getElementById('authSubmitBtn').dataset.tab || 'login';
   const errEl = document.getElementById('authError');
   errEl.style.display = 'none';
-  if (!supabase) return;
+  if (!supabaseClient) return;
   try {
     let result;
     if (tab === 'login') {
-      result = await supabase.auth.signInWithPassword({ email, password: pass });
+      result = await supabaseClient.auth.signInWithPassword({ email, password: pass });
     } else {
-      result = await supabase.auth.signUp({ email, password: pass });
+      result = await supabaseClient.auth.signUp({ email, password: pass });
     }
     if (result.error) throw result.error;
     document.getElementById('authModal').style.display = 'none';
@@ -64,7 +64,7 @@ async function submitAuth() {
 }
 
 async function logoutUser() {
-  if (supabase) await supabase.auth.signOut();
+  if (supabaseClient) await supabaseClient.auth.signOut();
 }
 
 function updateAuthUI(loggedIn, user) {
@@ -1445,9 +1445,9 @@ function saveAITemplateToGallery() {
 }
 
 async function saveAITemplateHistory(entry) {
-  if (supabase && currentUser) {
+  if (supabaseClient && currentUser) {
     try {
-      await supabase.from('ai_template_history').insert({
+      await supabaseClient.from('ai_template_history').insert({
         user_id: currentUser.id,
         template_id: entry.templateId || entry.id,
         prompt: entry.prompt || '',
@@ -1465,9 +1465,9 @@ async function saveAITemplateHistory(entry) {
 }
 
 async function loadAITemplateHistory() {
-  if (supabase && currentUser) {
+  if (supabaseClient && currentUser) {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('ai_template_history')
         .select('*')
         .eq('user_id', currentUser.id)
@@ -1520,9 +1520,9 @@ function renderAIHistory(history) {
 }
 
 async function deleteAIHistoryItem(templateId) {
-  if (supabase && currentUser) {
+  if (supabaseClient && currentUser) {
     try {
-      await supabase.from('ai_template_history').delete()
+      await supabaseClient.from('ai_template_history').delete()
         .eq('user_id', currentUser.id)
         .eq('template_id', templateId);
     } catch(e) { console.warn('Supabase delete failed', e); }
