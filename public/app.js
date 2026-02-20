@@ -1025,19 +1025,43 @@ function syncHeadlineColor(value, source) {
 
 function toggleColorNone(id) {
   const noneBtn = document.getElementById(id + 'None');
-  const picker = document.getElementById(id);
+  const swatch = document.getElementById(id + 'Swatch');
+  const hexInput = document.getElementById(id + 'Hex');
   const isNone = noneBtn?.classList.toggle('active');
-  if (picker) picker.disabled = isNone;
+  if (swatch) swatch.classList.toggle('is-none', isNone);
+  if (hexInput) { hexInput.value = ''; hexInput.placeholder = 'None'; hexInput.disabled = isNone; }
   updateCustomPalette();
 }
 
-// Called when user picks a color — auto-deactivates the None icon
-function activateColor(id) {
-  const noneBtn = document.getElementById(id + 'None');
-  if (noneBtn) noneBtn.classList.remove('active');
+function onPickerChange(id) {
   const picker = document.getElementById(id);
-  if (picker) picker.disabled = false;
+  const swatch = document.getElementById(id + 'Swatch');
+  const hexInput = document.getElementById(id + 'Hex');
+  const noneBtn = document.getElementById(id + 'None');
+  const color = picker?.value || '';
+  if (swatch) { swatch.style.background = color; swatch.classList.remove('is-none'); }
+  if (hexInput) { hexInput.value = color; hexInput.disabled = false; }
+  if (noneBtn) noneBtn.classList.remove('active');
   updateCustomPalette();
+}
+
+function onHexInput(id) {
+  const hexInput = document.getElementById(id + 'Hex');
+  const val = hexInput?.value.trim() || '';
+  const noneBtn = document.getElementById(id + 'None');
+  const swatch = document.getElementById(id + 'Swatch');
+  const picker = document.getElementById(id);
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+    if (swatch) { swatch.style.background = val; swatch.classList.remove('is-none'); }
+    if (picker) picker.value = val;
+    if (noneBtn) noneBtn.classList.remove('active');
+  }
+  updateCustomPalette();
+}
+
+function activateColor(id) {
+  // kept for compatibility
+  onPickerChange(id);
 }
 
 function updateCustomPalette() {
@@ -1098,9 +1122,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset all to None when opening custom
         ['cp1','cp2','cp3','cp4'].forEach(id => {
           const btn = document.getElementById(id + 'None');
-          const picker = document.getElementById(id);
+          const swatch = document.getElementById(id + 'Swatch');
+          const hexInput = document.getElementById(id + 'Hex');
           if (btn) btn.classList.add('active');
-          if (picker) picker.disabled = true;
+          if (swatch) swatch.classList.add('is-none');
+          if (hexInput) { hexInput.value = ''; hexInput.placeholder = 'None'; hexInput.disabled = true; }
         });
         if (row) row.style.display = 'flex';
       } else {
@@ -1448,6 +1474,8 @@ window.syncSalaryColor = syncSalaryColor;
 window.updateCustomPalette = updateCustomPalette;
 window.toggleColorNone = toggleColorNone;
 window.activateColor = activateColor;
+window.onPickerChange = onPickerChange;
+window.onHexInput = onHexInput;
 window.saveAITemplateToGallery = saveAITemplateToGallery;
 window.useHistoryTemplate = useHistoryTemplate;
 window.switchTemplateTab = switchTemplateTab;

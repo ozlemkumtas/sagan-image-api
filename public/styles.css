@@ -1077,25 +1077,44 @@ select:focus {
   border-radius: 4px;
 }
 
-.pal-swatch-wrap {
+/* Custom palette picker cards */
+.pal-picker-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 6px;
+  flex: 1;
 }
 
-.pal-no-color {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 2px solid #ddd;
-  background: #fff;
+.pal-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
   position: relative;
   cursor: pointer;
-  flex-shrink: 0;
   overflow: hidden;
   transition: border-color 0.15s;
+  min-height: 56px;
 }
-.pal-no-color::after {
+.pal-swatch:hover { border-color: #aaa; }
+.pal-swatch input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+/* None state */
+.pal-swatch.is-none {
+  background: #fff !important;
+  border-color: #e0e0e0;
+}
+.pal-swatch.is-none::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1106,23 +1125,51 @@ select:focus {
     #f5b801 calc(50% + 1.5px),
     transparent calc(50% + 1.5px)
   );
-}
-.pal-no-color.active {
-  border-color: #f5b801;
-  opacity: 1;
-}
-.pal-no-color:not(.active) {
-  opacity: 0.25;
-}
-.pal-no-color:hover {
-  border-color: #e53e3e;
-  opacity: 0.7;
+  pointer-events: none;
 }
 
-/* Dim the color picker when None is active */
-.custom-pal-picker input[type="color"]:disabled {
-  opacity: 0.2;
-  cursor: not-allowed;
+/* None badge — top-right corner of swatch */
+.pal-none-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  background: rgba(255,255,255,0.85);
+  color: #bbb;
+  transition: background 0.15s, color 0.15s;
+}
+.pal-none-btn.active {
+  background: #f5b801;
+  color: #fff;
+}
+.pal-none-btn:hover { background: #f5b801; color: #fff; }
+
+.pal-hex-input {
+  width: 100%;
+  font-size: 12px;
+  font-family: monospace;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 4px 6px;
+  text-align: center;
+  color: var(--secondary);
+  background: #fafafa;
+}
+.pal-hex-input:disabled { color: #ccc; background: #f5f5f5; }
+
+.pal-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .palette-custom-card {
@@ -1140,9 +1187,9 @@ select:focus {
 /* Custom palette pickers */
 .custom-palette-row {
   display: flex;
-  gap: 12px;
-  padding: 10px 2px 4px;
-  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 2px 4px;
+  flex-wrap: nowrap;
 }
 
 .custom-pal-picker {

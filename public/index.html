@@ -336,33 +336,37 @@
 
                   <!-- Custom palette pickers (shown when Custom selected) -->
                   <div class="custom-palette-row" id="customPaletteRow" style="display:none;">
-                    <div class="custom-pal-picker">
-                      <div class="pal-swatch-wrap">
-                        <div class="pal-no-color active" id="cp1None" onclick="toggleColorNone('cp1')" title="No color — AI chooses"></div>
-                        <input type="color" id="cp1" value="#25a2ff" oninput="activateColor('cp1')" onclick="activateColor('cp1')" disabled>
+                    <div class="pal-picker-card" id="cp1Card">
+                      <div class="pal-swatch" id="cp1Swatch" style="background:#25a2ff" onclick="document.getElementById('cp1').click()">
+                        <input type="color" id="cp1" value="#25a2ff" oninput="onPickerChange('cp1')">
+                        <button class="pal-none-btn active" id="cp1None" onclick="event.stopPropagation(); toggleColorNone('cp1')">None</button>
                       </div>
-                      <span>Background</span>
+                      <input type="text" class="pal-hex-input" id="cp1Hex" placeholder="None" oninput="onHexInput('cp1')">
+                      <span class="pal-label">Background</span>
                     </div>
-                    <div class="custom-pal-picker">
-                      <div class="pal-swatch-wrap">
-                        <div class="pal-no-color active" id="cp2None" onclick="toggleColorNone('cp2')" title="No color — AI chooses"></div>
-                        <input type="color" id="cp2" value="#f5b801" oninput="activateColor('cp2')" onclick="activateColor('cp2')" disabled>
+                    <div class="pal-picker-card" id="cp2Card">
+                      <div class="pal-swatch" id="cp2Swatch" style="background:#f5b801" onclick="document.getElementById('cp2').click()">
+                        <input type="color" id="cp2" value="#f5b801" oninput="onPickerChange('cp2')">
+                        <button class="pal-none-btn active" id="cp2None" onclick="event.stopPropagation(); toggleColorNone('cp2')">None</button>
                       </div>
-                      <span>Primary</span>
+                      <input type="text" class="pal-hex-input" id="cp2Hex" placeholder="None" oninput="onHexInput('cp2')">
+                      <span class="pal-label">Primary</span>
                     </div>
-                    <div class="custom-pal-picker">
-                      <div class="pal-swatch-wrap">
-                        <div class="pal-no-color active" id="cp3None" onclick="toggleColorNone('cp3')" title="No color — AI chooses"></div>
-                        <input type="color" id="cp3" value="#ff7455" oninput="activateColor('cp3')" onclick="activateColor('cp3')" disabled>
+                    <div class="pal-picker-card" id="cp3Card">
+                      <div class="pal-swatch" id="cp3Swatch" style="background:#ff7455" onclick="document.getElementById('cp3').click()">
+                        <input type="color" id="cp3" value="#ff7455" oninput="onPickerChange('cp3')">
+                        <button class="pal-none-btn active" id="cp3None" onclick="event.stopPropagation(); toggleColorNone('cp3')">None</button>
                       </div>
-                      <span>Accent</span>
+                      <input type="text" class="pal-hex-input" id="cp3Hex" placeholder="None" oninput="onHexInput('cp3')">
+                      <span class="pal-label">Accent</span>
                     </div>
-                    <div class="custom-pal-picker">
-                      <div class="pal-swatch-wrap">
-                        <div class="pal-no-color active" id="cp4None" onclick="toggleColorNone('cp4')" title="No color — AI chooses"></div>
-                        <input type="color" id="cp4" value="#093a3e" oninput="activateColor('cp4')" onclick="activateColor('cp4')" disabled>
+                    <div class="pal-picker-card" id="cp4Card">
+                      <div class="pal-swatch" id="cp4Swatch" style="background:#093a3e" onclick="document.getElementById('cp4').click()">
+                        <input type="color" id="cp4" value="#093a3e" oninput="onPickerChange('cp4')">
+                        <button class="pal-none-btn active" id="cp4None" onclick="event.stopPropagation(); toggleColorNone('cp4')">None</button>
                       </div>
-                      <span>Text</span>
+                      <input type="text" class="pal-hex-input" id="cp4Hex" placeholder="None" oninput="onHexInput('cp4')">
+                      <span class="pal-label">Text</span>
                     </div>
                   </div>
                 </div>
