@@ -866,6 +866,7 @@ const aiSelections = {
 
 // Palette descriptions for prompt building
 const PALETTE_PROMPTS = {
+  'none': null,  // AI chooses freely
   'classic':    'cream background (#ede9e5), dark teal headings (#093a3e), Sagan blue (#25a2ff) accents, yellow (#f5b801) highlights',
   'dark':       'dark teal background (#093a3e), Sagan blue (#25a2ff) accents, white text, yellow (#f5b801) CTA button',
   'gold':       'very dark near-black background (#1a1a1a), gold/yellow (#f5b801) as primary accent, white text, blue (#25a2ff) secondary',
@@ -934,12 +935,16 @@ function buildAIPrompt() {
   const outputTypePrompt = OUTPUT_TYPE_PROMPTS[aiSelections.outputType] || '';
 
   let palettePrompt;
-  if (aiSelections.palette === 'custom') {
+  if (aiSelections.palette === 'none') {
+    palettePrompt = `Color palette: Choose the most visually striking combination from the Sagan brand colors. Use your best judgement for background, headings, accents and buttons. If no strong accent color is needed, default the accent to match the background color.`;
+  } else if (aiSelections.palette === 'custom') {
     const c1 = document.getElementById('cp1')?.value || '#25a2ff';
     const c2 = document.getElementById('cp2')?.value || '#f5b801';
-    const c3 = document.getElementById('cp3')?.value || '#ff7455';
+    const accentAuto = document.getElementById('cp3Auto')?.checked;
+    const c3 = accentAuto ? c1 : (document.getElementById('cp3')?.value || '#ff7455');
     const c4 = document.getElementById('cp4')?.value || '#093a3e';
-    palettePrompt = `CUSTOM COLOR PALETTE (use ONLY these exact colors — REQUIRED): Background: ${c1}, Primary/headings: ${c2}, Accent/buttons/highlights: ${c3}, Text/body: ${c4}. Build the entire design around these specific colors. Do not substitute with other colors.`;
+    const accentNote = accentAuto ? ` (Accent defaults to background color — blend it in rather than using a contrasting accent.)` : '';
+    palettePrompt = `CUSTOM COLOR PALETTE (use ONLY these exact colors — REQUIRED): Background: ${c1}, Primary/headings: ${c2}, Accent/buttons/highlights: ${c3}${accentNote}, Text/body: ${c4}. Build the entire design around these specific colors. Do not substitute with other colors.`;
   } else {
     palettePrompt = `Color palette: ${PALETTE_PROMPTS[aiSelections.palette]}`;
   }
@@ -1009,6 +1014,17 @@ function syncHeadlineColor(value, source) {
     document.getElementById('headlineColorText').value = value;
   } else if (/^#[0-9a-fA-F]{6}$/.test(value)) {
     document.getElementById('headlineColorPicker').value = value;
+  }
+}
+
+function toggleAccentAuto(checkbox) {
+  const cp3 = document.getElementById('cp3');
+  if (cp3) cp3.disabled = checkbox.checked;
+  if (checkbox.checked) {
+    // Mirror background color into accent swatch visually
+    const c1 = document.getElementById('cp1')?.value || '#25a2ff';
+    if (cp3) cp3.value = c1;
+    updateCustomPalette();
   }
 }
 
@@ -1407,6 +1423,7 @@ window.syncHeadlineColor = syncHeadlineColor;
 window.syncTitleColor = syncTitleColor;
 window.syncSalaryColor = syncSalaryColor;
 window.updateCustomPalette = updateCustomPalette;
+window.toggleAccentAuto = toggleAccentAuto;
 window.saveAITemplateToGallery = saveAITemplateToGallery;
 window.useHistoryTemplate = useHistoryTemplate;
 window.switchTemplateTab = switchTemplateTab;

@@ -281,6 +281,15 @@
                 <div class="selector-group">
                   <div class="selector-label">Color Palette</div>
                   <div class="palette-grid">
+                    <button class="palette-card palette-none-card" data-palette="none" style="grid-column:1/-1;">
+                      <div class="palette-swatches palette-none-swatches">
+                        <span style="background:linear-gradient(135deg,#ede9e5 50%,#093a3e 50%)"></span>
+                        <span style="background:linear-gradient(135deg,#25a2ff 50%,#f5b801 50%)"></span>
+                        <span style="background:linear-gradient(135deg,#ff7455 50%,#73e491 50%)"></span>
+                        <span style="background:linear-gradient(135deg,#796aff 50%,#9e988f 50%)"></span>
+                      </div>
+                      <div class="palette-name">No Preference — AI Chooses</div>
+                    </button>
                     <button class="palette-card active" data-palette="classic">
                       <div class="palette-swatches"><span style="background:#ede9e5"></span><span style="background:#093a3e"></span><span style="background:#25a2ff"></span><span style="background:#f5b801"></span></div>
                       <div class="palette-name">Classic</div>
@@ -336,8 +345,9 @@
                       <span>Primary</span>
                     </div>
                     <div class="custom-pal-picker">
-                      <input type="color" id="cp3" value="#ff7455" oninput="updateCustomPalette()">
+                      <input type="color" id="cp3" value="#ff7455" oninput="updateCustomPalette()" id="cp3">
                       <span>Accent</span>
+                      <label class="pal-auto-label"><input type="checkbox" id="cp3Auto" onchange="toggleAccentAuto(this)"> auto</label>
                     </div>
                     <div class="custom-pal-picker">
                       <input type="color" id="cp4" value="#093a3e" oninput="updateCustomPalette()">
