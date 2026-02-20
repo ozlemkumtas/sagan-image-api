@@ -1084,7 +1084,18 @@ document.addEventListener('DOMContentLoaded', () => {
       card.classList.add('active');
       aiSelections.palette = card.dataset.palette;
       const row = document.getElementById('customPaletteRow');
-      if (row) row.style.display = card.dataset.palette === 'custom' ? 'flex' : 'none';
+      if (card.dataset.palette === 'custom') {
+        // Reset all to None when opening custom
+        ['cp1','cp2','cp3','cp4'].forEach(id => {
+          const cb = document.getElementById(id + 'None');
+          const picker = document.getElementById(id);
+          if (cb) cb.checked = true;
+          if (picker) picker.disabled = true;
+        });
+        if (row) row.style.display = 'flex';
+      } else {
+        if (row) row.style.display = 'none';
+      }
     });
   });
 
