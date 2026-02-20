@@ -1077,14 +1077,52 @@ select:focus {
   border-radius: 4px;
 }
 
-.pal-none-label {
+.pal-swatch-wrap {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: var(--text-muted);
+  gap: 6px;
+}
+
+.pal-no-color {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 2px solid #ddd;
+  background: #fff;
+  position: relative;
   cursor: pointer;
-  margin-top: 4px;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.pal-no-color::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 1.5px),
+    #e53e3e calc(50% - 1.5px),
+    #e53e3e calc(50% + 1.5px),
+    transparent calc(50% + 1.5px)
+  );
+}
+.pal-no-color.active {
+  border-color: #e53e3e;
+  opacity: 1;
+}
+.pal-no-color:not(.active) {
+  opacity: 0.25;
+}
+.pal-no-color:hover {
+  border-color: #e53e3e;
+  opacity: 0.7;
+}
+
+/* Dim the color picker when None is active */
+.custom-pal-picker input[type="color"]:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
 }
 
 .palette-custom-card {

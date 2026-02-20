@@ -337,24 +337,32 @@
                   <!-- Custom palette pickers (shown when Custom selected) -->
                   <div class="custom-palette-row" id="customPaletteRow" style="display:none;">
                     <div class="custom-pal-picker">
-                      <input type="color" id="cp1" value="#25a2ff" oninput="updateCustomPalette()" disabled>
+                      <div class="pal-swatch-wrap">
+                        <div class="pal-no-color active" id="cp1None" onclick="toggleColorNone('cp1')" title="No color — AI chooses"></div>
+                        <input type="color" id="cp1" value="#25a2ff" oninput="updateCustomPalette()" disabled>
+                      </div>
                       <span>Background</span>
-                      <label class="pal-none-label"><input type="checkbox" id="cp1None" onchange="toggleColorNone('cp1')" checked> None</label>
                     </div>
                     <div class="custom-pal-picker">
-                      <input type="color" id="cp2" value="#f5b801" oninput="updateCustomPalette()" disabled>
+                      <div class="pal-swatch-wrap">
+                        <div class="pal-no-color active" id="cp2None" onclick="toggleColorNone('cp2')" title="No color — AI chooses"></div>
+                        <input type="color" id="cp2" value="#f5b801" oninput="updateCustomPalette()" disabled>
+                      </div>
                       <span>Primary</span>
-                      <label class="pal-none-label"><input type="checkbox" id="cp2None" onchange="toggleColorNone('cp2')" checked> None</label>
                     </div>
                     <div class="custom-pal-picker">
-                      <input type="color" id="cp3" value="#ff7455" oninput="updateCustomPalette()" disabled>
+                      <div class="pal-swatch-wrap">
+                        <div class="pal-no-color active" id="cp3None" onclick="toggleColorNone('cp3')" title="No color — AI chooses"></div>
+                        <input type="color" id="cp3" value="#ff7455" oninput="updateCustomPalette()" disabled>
+                      </div>
                       <span>Accent</span>
-                      <label class="pal-none-label"><input type="checkbox" id="cp3None" onchange="toggleColorNone('cp3')" checked> None</label>
                     </div>
                     <div class="custom-pal-picker">
-                      <input type="color" id="cp4" value="#093a3e" oninput="updateCustomPalette()" disabled>
+                      <div class="pal-swatch-wrap">
+                        <div class="pal-no-color active" id="cp4None" onclick="toggleColorNone('cp4')" title="No color — AI chooses"></div>
+                        <input type="color" id="cp4" value="#093a3e" oninput="updateCustomPalette()" disabled>
+                      </div>
                       <span>Text</span>
-                      <label class="pal-none-label"><input type="checkbox" id="cp4None" onchange="toggleColorNone('cp4')" checked> None</label>
                     </div>
                   </div>
                 </div>

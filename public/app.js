@@ -938,7 +938,7 @@ function buildAIPrompt() {
   if (aiSelections.palette === 'none') {
     palettePrompt = `Color palette: Choose the most visually striking combination from the Sagan brand colors. Use your best judgement for background, headings, accents and buttons. If no strong accent color is needed, default the accent to match the background color.`;
   } else if (aiSelections.palette === 'custom') {
-    const isNone = (id) => document.getElementById(id + 'None')?.checked;
+    const isNone = (id) => document.getElementById(id + 'None')?.classList.contains('active');
     const val = (id, fallback) => isNone(id) ? null : (document.getElementById(id)?.value || fallback);
     const c1 = val('cp1', '#25a2ff');
     const c2 = val('cp2', '#f5b801');
@@ -1024,9 +1024,10 @@ function syncHeadlineColor(value, source) {
 }
 
 function toggleColorNone(id) {
-  const checkbox = document.getElementById(id + 'None');
+  const noneBtn = document.getElementById(id + 'None');
   const picker = document.getElementById(id);
-  if (picker) picker.disabled = checkbox?.checked;
+  const isNone = noneBtn?.classList.toggle('active');
+  if (picker) picker.disabled = isNone;
   updateCustomPalette();
 }
 
@@ -1087,9 +1088,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (card.dataset.palette === 'custom') {
         // Reset all to None when opening custom
         ['cp1','cp2','cp3','cp4'].forEach(id => {
-          const cb = document.getElementById(id + 'None');
+          const btn = document.getElementById(id + 'None');
           const picker = document.getElementById(id);
-          if (cb) cb.checked = true;
+          if (btn) btn.classList.add('active');
           if (picker) picker.disabled = true;
         });
         if (row) row.style.display = 'flex';
