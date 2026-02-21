@@ -528,30 +528,50 @@ function showModal() {
 }
 
 // Save generated image to custom templates
-function saveToTemplates(index, jobName) {
+async function saveToTemplates(index, jobName) {
   const image = state.generatedImages[index];
   if (!image) return;
 
-  const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+  const id = 'custom_' + Date.now();
+  const name = jobName || 'Custom Template';
+  const savedAt = new Date().toLocaleDateString('en-US');
 
-  const newTemplate = {
-    id: 'custom_' + Date.now(),
-    name: jobName || 'Custom Template',
-    imageBase64: image,
-    savedAt: new Date().toLocaleDateString('en-US'),
-    template: state.template,
-    dotStyle: state.dotStyle,
-    logoStyle: state.logoStyle
-  };
-
-  customTemplates.unshift(newTemplate);
-  localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
-
-  showToast('Saved to Templates!', 'success');
-
-  if (document.getElementById('page-templates').classList.contains('active')) {
-    loadTemplates();
+  if (supabaseClient && currentUser) {
+    try {
+      // Upload image to Supabase Storage
+      const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+      const byteCharacters = atob(base64Data);
+      const byteArray = new Uint8Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) byteArray[i] = byteCharacters.charCodeAt(i);
+      const blob = new Blob([byteArray], { type: 'image/png' });
+      const filePath = `${currentUser.id}/${id}.png`;
+      const { error: uploadError } = await supabaseClient.storage.from('template-images').upload(filePath, blob);
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabaseClient.storage.from('template-images').getPublicUrl(filePath);
+      const imageUrl = urlData.publicUrl;
+      // Save metadata to DB
+      await supabaseClient.from('saved_templates').insert({
+        id,
+        user_id: currentUser.id,
+        name,
+        base_template: state.template,
+        dot_style: state.dotStyle,
+        logo_style: state.logoStyle,
+        image_url: imageUrl,
+        saved_at: new Date().toISOString()
+      });
+      showToast('Saved to Templates!', 'success');
+      if (document.getElementById('page-templates').classList.contains('active')) loadTemplates();
+      return;
+    } catch(e) { console.warn('Supabase save failed, falling back to localStorage', e); }
   }
+
+  // localStorage fallback
+  const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+  customTemplates.unshift({ id, name, imageBase64: image, savedAt, template: state.template, dotStyle: state.dotStyle, logoStyle: state.logoStyle });
+  localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
+  showToast('Saved to Templates!', 'success');
+  if (document.getElementById('page-templates').classList.contains('active')) loadTemplates();
 }
 
 function closeModal() {
@@ -587,7 +607,25 @@ function switchTemplateTab(tab) {
 
 async function loadTemplates() {
   const hiddenTemplates = JSON.parse(localStorage.getItem('hiddenTemplates') || '[]');
-  const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+  // Load saved templates from Supabase or localStorage
+  let customTemplates = [];
+  if (supabaseClient && currentUser) {
+    try {
+      const { data, error } = await supabaseClient.from('saved_templates')
+        .select('*').eq('user_id', currentUser.id).order('saved_at', { ascending: false });
+      if (!error && data) {
+        customTemplates = data.map(r => ({
+          id: r.id, name: r.name, imageBase64: null, imageUrl: r.image_url,
+          savedAt: new Date(r.saved_at).toLocaleDateString('en-US'),
+          template: r.base_template, dotStyle: r.dot_style, logoStyle: r.logo_style
+        }));
+      }
+    } catch(e) {
+      customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+    }
+  } else {
+    customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
+  }
   const aiHistory = JSON.parse(localStorage.getItem('aiTemplateHistory') || '[]');
   const grid = document.getElementById('templatesGrid');
 
@@ -644,7 +682,7 @@ async function loadTemplates() {
         <div class="template-custom-badge">Saved</div>
         <button class="template-delete" onclick="event.stopPropagation(); deleteCustomTemplate('${t.id}')" title="Delete">×</button>
         <div class="template-preview" onclick="previewCustomTemplate('${t.id}')">
-          <img src="${t.imageBase64}" alt="${t.name}">
+          <img src="${t.imageUrl || t.imageBase64}" alt="${t.name}">
         </div>
         <div class="template-info" onclick="previewCustomTemplate('${t.id}')">
           <div>${t.name}</div>
@@ -726,7 +764,17 @@ function syncTemplateDropdown(templates, aiOutputTypeMap = {}) {
 }
 
 // Delete a saved custom template
-function deleteCustomTemplate(id) {
+async function deleteCustomTemplate(id) {
+  if (supabaseClient && currentUser) {
+    try {
+      const filePath = `${currentUser.id}/${id}.png`;
+      await supabaseClient.storage.from('template-images').remove([filePath]);
+      await supabaseClient.from('saved_templates').delete().eq('id', id).eq('user_id', currentUser.id);
+      loadTemplates();
+      showToast('Template deleted');
+      return;
+    } catch(e) { console.warn('Supabase delete failed', e); }
+  }
   let customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
   customTemplates = customTemplates.filter(t => t.id !== id);
   localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
@@ -735,11 +783,22 @@ function deleteCustomTemplate(id) {
 }
 
 // Preview a saved custom template — uses the new preview modal
-function previewCustomTemplate(id) {
+async function previewCustomTemplate(id) {
+  // Try Supabase first
+  if (supabaseClient && currentUser) {
+    try {
+      const { data, error } = await supabaseClient.from('saved_templates')
+        .select('*').eq('id', id).eq('user_id', currentUser.id).single();
+      if (!error && data) {
+        showTemplatePreview(id, data.name, data.image_url, data.base_template || id);
+        return;
+      }
+    } catch(e) {}
+  }
+  // localStorage fallback
   const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
   const t = customTemplates.find(ct => ct.id === id);
   if (!t) return;
-  // Show base64 image directly; "Use This Template" will select the original server template
   showTemplatePreview(id, t.name, t.imageBase64, t.template || id);
 }
 
@@ -1438,23 +1497,39 @@ function downloadAITemplatePreview() {
   showToast('Downloaded!', 'success');
 }
 
-function saveAITemplateToGallery() {
+async function saveAITemplateToGallery() {
   if (!aiTemplatePreviewImage) return;
 
   const history = JSON.parse(localStorage.getItem('aiTemplateHistory') || '[]');
   const latest = history[0];
   const name = latest ? latest.templateId : ('AI Template ' + new Date().toLocaleDateString('en-US'));
+  const id = 'custom_' + Date.now();
+  const templateId = latest ? latest.templateId : 'ai-template';
+
+  if (supabaseClient && currentUser) {
+    try {
+      const base64Data = aiTemplatePreviewImage.replace(/^data:image\/\w+;base64,/, '');
+      const byteCharacters = atob(base64Data);
+      const byteArray = new Uint8Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) byteArray[i] = byteCharacters.charCodeAt(i);
+      const blob = new Blob([byteArray], { type: 'image/png' });
+      const filePath = `${currentUser.id}/${id}.png`;
+      const { error: uploadError } = await supabaseClient.storage.from('template-images').upload(filePath, blob);
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabaseClient.storage.from('template-images').getPublicUrl(filePath);
+      await supabaseClient.from('saved_templates').insert({
+        id, user_id: currentUser.id, name,
+        base_template: templateId, dot_style: aiSelections.dotStyle,
+        logo_style: aiSelections.logoStyle, image_url: urlData.publicUrl,
+        saved_at: new Date().toISOString()
+      });
+      showToast('Saved to Template Gallery!', 'success');
+      return;
+    } catch(e) { console.warn('Supabase gallery save failed, falling back', e); }
+  }
 
   const customTemplates = JSON.parse(localStorage.getItem('customTemplates') || '[]');
-  customTemplates.unshift({
-    id: 'custom_' + Date.now(),
-    name,
-    imageBase64: aiTemplatePreviewImage,
-    savedAt: new Date().toLocaleDateString('en-US'),
-    template: latest ? latest.templateId : 'ai-template',
-    dotStyle: aiSelections.dotStyle,
-    logoStyle: aiSelections.logoStyle
-  });
+  customTemplates.unshift({ id, name, imageBase64: aiTemplatePreviewImage, savedAt: new Date().toLocaleDateString('en-US'), template: templateId, dotStyle: aiSelections.dotStyle, logoStyle: aiSelections.logoStyle });
   localStorage.setItem('customTemplates', JSON.stringify(customTemplates));
   showToast('Saved to Template Gallery!', 'success');
 }
