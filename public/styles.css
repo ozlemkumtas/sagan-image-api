@@ -265,6 +265,15 @@ body {
   margin-bottom: 4px;
 }
 
+.job-request-name {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .job-hr-badge {
   display: inline-block;
   font-size: 10px;

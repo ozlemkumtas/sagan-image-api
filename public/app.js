@@ -308,6 +308,9 @@ function renderJobs(searchQuery = '') {
     const hrBadge = job.hrNumber
       ? `<span class="job-hr-badge">${job.hrNumber}</span>`
       : '';
+    const requestNameText = job.requestName && job.requestName !== job.title
+      ? `<div class="job-request-name">${job.requestName}</div>`
+      : '';
     return `
     <div class="job-card ${state.selectedJobs.has(job.id) ? 'selected' : ''}"
          data-id="${job.id}"
@@ -318,6 +321,7 @@ function renderJobs(searchQuery = '') {
           <span class="job-title">${job.title}</span>
           ${hrBadge}
         </div>
+        ${requestNameText}
         <div class="job-meta">
           <span class="job-salary">${job.salary || 'Salary TBD'}</span>
           <span>${job.location}</span>
